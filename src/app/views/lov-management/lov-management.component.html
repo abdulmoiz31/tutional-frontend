@@ -1,0 +1,419 @@
+<div class="container parent-div row" style="width:1000px;">
+    <div class="header-div">
+        <h2 class="heading">Stack</h2>
+        <button class="btn btn-outline-dark rounded-lg batn" type="button" (click)="open(stackModal)">
+            <i class="fa fa-plus"></i>
+            Add Stack</button>
+    </div>
+    <div class="material container table-div">
+        <ngx-datatable #table class="material fullscreen ngx-table" [rows]="stackData"
+            [loadingIndicator]="loadingIndicatorForStack" [columns]="columns" [columnMode]="ColumnMode.force"
+            rowHeight="auto" [reorderable]="reorderable" [externalPaging]="false" [limit]="12" [headerHeight]="50"
+            [footerHeight]="50" rowHeight="auto" [rowHeight]="50" [scrollbarH]="true">
+            <ngx-datatable-column name="Emp ID" prop='s_id'>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Description" prop='stack_Name'>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Action">
+                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                    <button type="button" class="btn btn-outline-success" (click)="openStackModal(stackEdit, rowIndex)"
+                        *ngIf="isAdmin"><i class="fa fa-edit"></i> Edit</button>
+                    <button type="button" class="btn btn-outline-danger delete-table-btn"
+                        (click)="openStackModalForDelete(stackDelete, rowIndex)">Delete</button>
+                </ng-template>
+            </ngx-datatable-column>
+        </ngx-datatable>
+    </div>
+</div>
+
+<div class="container parent-div row" style="margin-top: 20px; width:1000px;">
+    <div class="header-div">
+        <h2 class="heading">Location</h2>
+        <button class="btn btn-outline-dark rounded-lg batn" type="button" (click)="open(locationModal)">
+            <i class="fa fa-plus"></i>
+            Add Location</button>
+    </div>
+    <div class="material container table-div">
+        <ngx-datatable #table class="material fullscreen ngx-table" [rows]="locationData"
+            [loadingIndicator]="loadingIndicatorForLocation" [columns]="columns" [columnMode]="ColumnMode.force"
+            rowHeight="auto" [reorderable]="reorderable" [externalPaging]="false" [limit]="12" [headerHeight]="50"
+            [footerHeight]="50" rowHeight="auto" [rowHeight]="50" [scrollbarH]="true">
+            <ngx-datatable-column name="Emp ID" prop='l_id'>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Description" prop='l_name'>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Action">
+                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                    <button type="button" class="btn btn-outline-success"
+                        (click)="openLocationModal(locationEdit, rowIndex)" *ngIf="isAdmin"><i class="fa fa-edit"></i>
+                        Edit</button>
+                    <button type="button" class="btn btn-outline-danger delete-table-btn"
+                        (click)="openLocationModalForDelete(locationDelete, rowIndex)">Delete</button>
+                </ng-template>
+            </ngx-datatable-column>
+        </ngx-datatable>
+    </div>
+</div>
+
+<div class="container parent-div row" style="margin-top: 20px; width:1000px;">
+    <div class="header-div">
+        <h2 class="heading">Designation</h2>
+        <button class="btn btn-outline-dark rounded-lg batn" type="button" (click)="open(designationModal)">
+            <i class="fa fa-plus"></i>
+            Add Designation</button>
+    </div>
+    <div class="material container table-div">
+        <ngx-datatable #table class="material fullscreen ngx-table" [rows]="designationData"
+            [loadingIndicator]="loadingIndicatorForDesignation" [columns]="columns" [columnMode]="ColumnMode.force"
+            rowHeight="auto" [reorderable]="reorderable" [externalPaging]="false" [limit]="12" [headerHeight]="50"
+            [footerHeight]="50" rowHeight="auto" [rowHeight]="50" [scrollbarH]="true">
+            <ngx-datatable-column name="Emp ID" prop='d_id'>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Description" prop='designation_name'>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Action">
+                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                    <button type="button" class="btn btn-outline-success"
+                        (click)="openDesignationModal(designationEdit, rowIndex)" *ngIf="isAdmin"><i
+                            class="fa fa-edit"></i> Edit</button>
+                    <button type="button" class="btn btn-outline-danger delete-table-btn"
+                        (click)="openDesignationModalForDelete(designationDelete, rowIndex)">Delete</button>
+                </ng-template>
+            </ngx-datatable-column>
+        </ngx-datatable>
+    </div>
+
+    <!--Stack Modal-->
+    <ng-template #stackModal let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">{{project_name}}</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="mx-auto">
+                <div class="card mx-4">
+                    <div class="card-body p-4">
+                        <form [formGroup]="modalForm">
+                            <h1>Enter Stack</h1>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="icon-settings"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Add Stack" formControlName="name"
+                                    required>
+                            </div>
+                            <small class="text-danger m-0 p-0"
+                                *ngIf="!modalForm.get('name').valid && modalForm.get('name').touched">
+                                <span *ngIf="modalForm.get('name').errors ">*Enter a Valid Stack</span>
+                            </small>
+
+                            <button type="button" class="btn btn-block btn-success mt-4" (click)="enterStack()">Add
+                                Stack</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
+        </div>
+    </ng-template>
+
+    <!--Stack Edit Modal-->
+    <ng-template #stackEdit let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">{{project_name}}</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="mx-auto">
+                <div class="card mx-4">
+                    <div class="card-body p-4">
+                        <form [formGroup]="modalForm">
+                            <h1>Update Stack</h1>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="icon-settings"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Update Stack"
+                                    formControlName="name" required>
+                            </div>
+                            <small class="text-danger m-0 p-0"
+                                *ngIf="!modalForm.get('name').valid && modalForm.get('name').touched">
+                                <span *ngIf="modalForm.get('name').errors ">*Enter a Valid Stack</span>
+                            </small>
+
+                            <button type="button" class="btn btn-block btn-success mt-4" (click)="updateStack()">Update
+                                Stack</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </ng-template>
+
+    <!--Stack Delete Modal-->
+    <ng-template #stackDelete let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">{{project_name}}</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="mx-auto">
+                <div class="card mx-4">
+                    <div class="card-body p-4">
+                        <form [formGroup]="modalForm">
+                            <h1>Sure To Delete Stack?</h1>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="icon-settings"></i></span>
+                                </div>
+                                <input type="text" class="form-control" formControlName="name">
+                            </div>
+                            <small class="text-danger m-0 p-0"
+                                *ngIf="!modalForm.get('name').valid && modalForm.get('name').touched">
+                                <span *ngIf="modalForm.get('name').errors ">*Enter a Valid Stack</span>
+                            </small>
+
+                            <button type="button" class="btn btn-block btn-danger mt-4" (click)="deleteStack()">Delete
+                                Stack</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </ng-template>
+
+    <!--Location Modal-->
+    <ng-template #locationModal let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">{{project_name}}</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="mx-auto">
+                <div class="card mx-4">
+                    <div class="card-body p-4">
+                        <form [formGroup]="modalForm">
+                            <h1>Enter Location</h1>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="icon-location-pin"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Enter Location"
+                                    formControlName="name" required>
+                            </div>
+                            <small class="text-danger m-0 p-0"
+                                *ngIf="!modalForm.get('name').valid && modalForm.get('name').touched">
+                                <span *ngIf="modalForm.get('name').errors ">*Enter a Valid Location</span>
+                            </small>
+
+                            <button type="button" class="btn btn-block btn-success mt-4" (click)="enterLocation()">Add
+                                Location</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
+        </div>
+    </ng-template>
+
+    <!--Location Edit Modal-->
+    <ng-template #locationEdit let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">{{project_name}}</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="mx-auto">
+                <div class="card mx-4">
+                    <div class="card-body p-4">
+                        <form [formGroup]="modalForm">
+                            <h1>Update Location</h1>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="icon-location-pin"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Update Location"
+                                    formControlName="name" required>
+                            </div>
+                            <small class="text-danger m-0 p-0"
+                                *ngIf="!modalForm.get('name').valid && modalForm.get('name').touched">
+                                <span *ngIf="modalForm.get('name').errors ">*Enter a Valid Location</span>
+                            </small>
+
+                            <button type="button" class="btn btn-block btn-success mt-4"
+                                (click)="updateLocation()">Update
+                                Location</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </ng-template>
+
+    <!--Location Delete Modal-->
+    <ng-template #locationDelete let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">{{project_name}}</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="mx-auto">
+                <div class="card mx-4">
+                    <div class="card-body p-4">
+                        <form [formGroup]="modalForm">
+                            <h1>Sure To Delete Location?</h1>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="icon-location-pin"></i></span>
+                                </div>
+                                <input type="text" class="form-control" formControlName="name">
+                            </div>
+                            <small class="text-danger m-0 p-0"
+                                *ngIf="!modalForm.get('name').valid && modalForm.get('name').touched">
+                                <span *ngIf="modalForm.get('name').errors ">*Enter a Valid Location</span>
+                            </small>
+
+                            <button type="button" class="btn btn-block btn-danger mt-4"
+                                (click)="deleteLocation()">Delete
+                                Location</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+
+    <!--Designation Modal-->
+    <ng-template #designationModal let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">{{project_name}}</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="mx-auto">
+                <div class="card mx-4">
+                    <div class="card-body p-4">
+                        <form [formGroup]="modalForm">
+                            <h1>Enter Designation</h1>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="icon-user"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Enter Designation"
+                                    formControlName="name" required>
+                            </div>
+                            <small class="text-danger m-0 p-0"
+                                *ngIf="!modalForm.get('name').valid && modalForm.get('name').touched">
+                                <span *ngIf="modalForm.get('name').errors ">*Enter a Valid Designation</span>
+                            </small>
+
+                            <button type="button" class="btn btn-block btn-success mt-4"
+                                (click)="enterDesignation()">Add
+                                Designation</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
+        </div>
+    </ng-template>
+
+    <!--Designation Edit Modal-->
+    <ng-template #designationEdit let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">{{project_name}}</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="mx-auto">
+                <div class="card mx-4">
+                    <div class="card-body p-4">
+                        <form [formGroup]="modalForm">
+                            <h1>Update Designation</h1>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="icon-user"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Update Designation"
+                                    formControlName="name" required>
+                            </div>
+                            <small class="text-danger m-0 p-0"
+                                *ngIf="!modalForm.get('name').valid && modalForm.get('name').touched">
+                                <span *ngIf="modalForm.get('name').errors ">*Enter a Valid Designation</span>
+                            </small>
+
+                            <button type="button" class="btn btn-block btn-success mt-4"
+                                (click)="updateDesignation()">Update
+                                Designation</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </ng-template>
+
+    <!--Stack Delete Modal-->
+    <ng-template #designationDelete let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">{{project_name}}</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="mx-auto">
+                <div class="card mx-4">
+                    <div class="card-body p-4">
+                        <form [formGroup]="modalForm">
+                            <h1>Sure To Delete Designation?</h1>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="icon-user"></i></span>
+                                </div>
+                                <input type="text" class="form-control" formControlName="name">
+                            </div>
+                            <small class="text-danger m-0 p-0"
+                                *ngIf="!modalForm.get('name').valid && modalForm.get('name').touched">
+                                <span *ngIf="modalForm.get('name').errors ">*Enter a Valid Designation</span>
+                            </small>
+
+                            <button type="button" class="btn btn-block btn-danger mt-4"
+                                (click)="deleteDesignation()">Delete
+                                Designation</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </ng-template>
+</div>

@@ -1,0 +1,17 @@
+<div class="container parent-div row">
+    <div class="header-div">
+        <h2 class="heading">Tutorials</h2>
+    </div>
+    <div class="container table-div">
+        <ngx-datatable #table class="material fullscreen ngx-table" [rows]="data" [loadingIndicator]="loadingIndicator"
+            [columns]="columns" [columnMode]="ColumnMode.force" rowHeight="auto" [reorderable]="reorderable"
+            [externalPaging]="false" [limit]="12" [headerHeight]="50" [footerHeight]="50" rowHeight="auto"
+            [rowHeight]="50">
+            <ngx-datatable-column name="Tutorial Name" prop='tutorial_Name'>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Tutorial URL" prop='tutorial_URL'>
+            </ngx-datatable-column>
+        </ngx-datatable>
+    </div>
+  
+ 

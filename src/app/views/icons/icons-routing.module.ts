@@ -1,7 +1,10 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
 
 import { CoreUIIconsComponent } from './coreui-icons.component';
+import { FlagsComponent } from './flags.component';
+import { FontAwesomeComponent } from './font-awesome.component';
+import { SimpleLineIconsComponent } from './simple-line-icons.component';
 
 const routes: Routes = [
   {
@@ -22,17 +25,24 @@ const routes: Routes = [
         }
       },
       {
-        path: 'brands',
-        component: CoreUIIconsComponent,
+        path: 'flags',
+        component: FlagsComponent,
         data: {
-          title: 'Brands'
+          title: 'Flags'
         }
       },
       {
-        path: 'flags',
-        component: CoreUIIconsComponent,
+        path: 'font-awesome',
+        component: FontAwesomeComponent,
         data: {
-          title: 'Flags'
+          title: 'Font Awesome'
+        }
+      },
+      {
+        path: 'simple-line-icons',
+        component: SimpleLineIconsComponent,
+        data: {
+          title: 'Simple Line Icons'
         }
       }
     ]
@@ -43,5 +53,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class IconsRoutingModule {
-}
+export class IconsRoutingModule {}

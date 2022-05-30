@@ -1,0 +1,179 @@
+<div class="container parent-div row">
+    <div class="header-div">
+        <h2 class="heading">Announcement Management</h2>
+        <div class="input-group text-center input-div">
+            <button *ngIf="isAdmin" class="btn btn-outline-dark rounded-lg batn" type="button"
+                (click)="open(tutorialFormA,-1)"><i class="fa fa-plus"></i>
+                Add Announcement</button>
+            <input #searchContent type="text" class="search-input form-control form control-sm"
+                (keyup)="filterDatatable($event)" placeholder="Search for...">
+        </div>
+    </div>
+    <div class="container table-div">
+        <ngx-datatable #table class="material fullscreen ngx-table" [rows]="data1" [loadingIndicator]="loadingIndicator"
+            [columns]="columns" [columnMode]="ColumnMode.force" rowHeight="auto" [reorderable]="reorderable"
+            [externalPaging]="false" [limit]="12" [headerHeight]="50" [footerHeight]="50" rowHeight="auto"
+            [rowHeight]="50">
+            <ngx-datatable-column name="Title" prop='title'>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Announcement" prop='announcement'>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Actions" prop="name">
+                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                    <button type="button" class="btn btn-outline-success" (click)='open(updateTutorialpop, rowIndex)'
+                        *ngIf="row['check']"><i class="fa fa-edit"></i> Edit</button>
+                    <button *ngIf="row['check']" type="button" class="btn btn-outline-danger delete-table-btn"
+                        (click)="openForDelete(delete, rowIndex)">Delete</button>
+                </ng-template>
+            </ngx-datatable-column>
+
+        </ngx-datatable>
+    </div>
+
+    <!-- Modal Edit-->
+    <ng-template #updateTutorialpop let-modal>
+        <div class="modal-header">
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="mx-auto">
+                <div class="card mx-4">
+                    <div class="card-body p-4">
+                        <form [formGroup]="updateAnnouncementForm">
+                            <h1>Announcement</h1>
+                            <p class="text-muted">Update Announcement</p>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-file-text-o"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Title" autocomplete="title"
+                                    formControlName="title" required>
+                            </div>
+                            <small class="text-danger m-0 p-0"
+                                *ngIf="!updateAnnouncementForm.get('title').valid && updateAnnouncementForm.get('title').touched">
+                                <span *ngIf="updateAnnouncementForm.get('title').errors ">*Enter Title</span>
+                            </small>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-link"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Announcement"
+                                    formControlName="announcement" required>
+                            </div>
+                            <small class="text-danger m-0 p-0"
+                                *ngIf="!updateAnnouncementForm.get('announcement').valid && updateAnnouncementForm.get('announcement').touched">
+                                <span *ngIf="updateAnnouncementForm.get('announcement').errors ">*Announcement cannot be
+                                    empty</span>
+                            </small>
+                            <button type="button" class="btn btn-block btn-success mt-4"
+                                (click)="updateAnnouncement()">Update
+                                Announcement</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
+        </div>
+    </ng-template>
+
+    <!-- Delete Modal-->
+    <ng-template #delete let-modal>
+        <div class="modal-header">
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="mx-auto">
+                <div class="card mx-4">
+                    <div class="card-body p-4">
+                        <form [formGroup]="updateAnnouncementForm">
+                            <h1>Sure To Delete Announcement?</h1>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-file-text-o"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="title" autocomplete="title"
+                                    formControlName="title" required>
+                            </div>
+                            <small class="text-danger m-0 p-0"
+                                *ngIf="!updateAnnouncementForm.get('title').valid && updateAnnouncementForm.get('title').touched">
+                                <span *ngIf="updateAnnouncementForm.get('title').errors ">*Enter Title</span>
+                            </small>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-link"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Tutorial Url"
+                                    formControlName="announcement" required>
+                            </div>
+                            <small class="text-danger m-0 p-0"
+                                *ngIf="!updateAnnouncementForm.get('announcement').valid && updateAnnouncementForm.get('announcement').touched">
+                                <span *ngIf="updateAnnouncementForm.get('announcement').errors ">*Announcement cannot be
+                                    empty</span>
+                            </small>
+                            <button type="button" class="btn btn-block btn-danger mt-4"
+                                (click)="deleteAnnouncement()">Delete
+                                Announcement</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+    <!-- Add Modal-->
+    <ng-template #tutorialFormA let-modal>
+        <div class="modal-header">
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="mx-auto">
+                <div class="card mx-4">
+                    <div class="card-body p-4">
+                        <form [formGroup]="announcementForm">
+                            <h1>Announcement</h1>
+                            <p class="text-muted">Add Announcement</p>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-file-text-o"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Title" autocomplete="title"
+                                    formControlName="title" required>
+                            </div>
+                            <small class="text-danger m-0 p-0"
+                                *ngIf="!announcementForm.get('title').valid && announcementForm.get('title').touched">
+                                <span *ngIf="announcementForm.get('title').errors ">*Enter Title</span>
+                            </small>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-link"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Announcement"
+                                    formControlName="announcement" required>
+                            </div>
+                            <small class="text-danger m-0 p-0"
+                                *ngIf="!announcementForm.get('announcement').valid && announcementForm.get('announcement').touched">
+                                <span *ngIf="announcementForm.get('announcement').errors ">*Announcement cannot be
+                                    empty</span>
+                            </small>
+                            <button type="button" class="btn btn-block btn-success mt-4" (click)="addAnnouncement()">Add
+                                Announcement</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
+        </div>
+    </ng-template>
+
+</div>

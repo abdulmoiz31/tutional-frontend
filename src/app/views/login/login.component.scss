@@ -1,0 +1,28 @@
+@import '~ngx-toastr/toastr.css';
+
+input.ng-touched.ng-invalid{
+    border: 1px solid red;
+    box-shadow: 0 0 13px inset rgba(255,0,0,0.2);
+}
+.image-div{
+    background-image: url('../../../assets/img/team.png');
+    background-size: cover;
+    height: 100vh;
+}
+.loginSection{
+    height: 100vh;
+    width: 100%;
+}
+.min-size{
+    min-width: 300px;
+}
+.full-height{
+    height: 100vh;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.app-body{
+    margin-top: 0px;
+}

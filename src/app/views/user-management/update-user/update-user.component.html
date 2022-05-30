@@ -1,0 +1,284 @@
+<div class="container col-7">
+    <br />
+    <h2 class="text text-primary">Update Profile</h2>
+    <div class="row justify-content-center">
+        <form [formGroup]="myReactiveForm">
+            <div class="form-row">
+                <div class="form-group col-md-6 col-sm-12">
+                    <label for="fullname">Full Name </label>
+                    <input type="fullname" formControlName="fullname" class="form-control" id="fullname"
+                        placeholder="Full Name" />
+                    <small class="text-danger" *ngIf="
+              !myReactiveForm.get('fullname').valid &&
+              myReactiveForm.get('fullname').touched
+            ">
+                        <span *ngIf="myReactiveForm.get('fullname').errors">*Enter Your Full Name</span>
+                    </small>
+                </div>
+                <div class="form-group col-md-6 col-sm-12">
+                    <label for="email">Email</label>
+                    <input type="email" formControlName="email" class="form-control" id="email" placeholder="Email" />
+                    <small class="text-danger" *ngIf="
+              !myReactiveForm.get('email').valid &&
+              myReactiveForm.get('email').touched
+            ">
+                        <span *ngIf="myReactiveForm.get('email').errors">*Enter a valid Email Address</span>
+                    </small>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6 col-sm-12">
+                    <label for="contact">Contact</label>
+                    <input id="contact" type="text" class="form-control" formControlName="contact" id="contact"
+                        placeholder="Contact Number" />
+                    <br />
+                    <small class="text-danger" *ngIf="
+              !myReactiveForm.get('contact').valid &&
+              myReactiveForm.get('contact').touched
+            ">
+                        <span *ngIf="myReactiveForm.get('contact').errors">*Enter a valid Phone Number</span>
+                    </small>
+                </div>
+                <div class="form-group col-md-6 col-sm-12">
+                    <label for="center">Center</label>
+                    <br />
+                    <select id="center" type="dropdown" class="form-control" formControlName="center" id="center"
+                        placeholder="Center">
+                        <option value="">Center</option>
+                        <option *ngFor="let center of locationList" [value]="center._id">
+                            {{ center.l_Name }}
+                        </option>
+                    </select>
+                    <small class="text-danger" *ngIf="
+              !myReactiveForm.get('center').valid &&
+              myReactiveForm.get('center').touched
+            ">
+                        <span *ngIf="myReactiveForm.get('center').errors">*Select your City
+                        </span>
+                    </small>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-md-6 col-sm-12">
+                    <label for="designation">Designation</label>
+                    <br />
+                    <select id="designation" type="dropdown" class="form-control" formControlName="designation"
+                        id="designation" placeholder="Designation">
+                        <option value="">Designation</option>
+                        <option [value]="designation._id" *ngFor="let designation of designationList">
+                            {{ designation.designation_Name }}
+                        </option>
+                    </select>
+                    <small class="text-danger" *ngIf="
+              !myReactiveForm.get('designation').valid &&
+              myReactiveForm.get('designation').touched
+            ">
+                        <span *ngIf="myReactiveForm.get('designation').errors">*Select your Designation
+                        </span>
+                    </small>
+                </div>
+                <div class="form-group col-md-6 col-sm-12">
+                    <label for="experiance">Experience</label>
+                    <input id="experiance" type="number" min="0" class="form-control" formControlName="experiance"
+                        id="experiance" placeholder="Experience" />
+                    <small class="text-danger" *ngIf="
+              !myReactiveForm.get('experiance').valid &&
+              myReactiveForm.get('experiance').touched
+            ">
+                        <span *ngIf="myReactiveForm.get('experiance').errors">*Enter your Experience</span>
+                    </small>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6 col-sm-12">
+                    <label for="currentstack">Current Stack</label>
+                    <br />
+                    <ng-multiselect-dropdown [settings]="dropdownSettings" [data]="stackList"
+                        (onSelect)="onItemSelectCurrent($event)" (onSelectAll)="onSelectAllCurrentStackCurrent($event)"
+                        (onDeSelect)="unSelectCurrent($event)" id="currentstack"
+                        (onDeSelectAll)="unSelectAllCurrent($event)" formControlName="currentstack">
+                    </ng-multiselect-dropdown>
+                    <br />
+                    <small class="text-danger" *ngIf="
+              !myReactiveForm.get('currentstack').valid &&
+              myReactiveForm.get('currentstack').touched
+            ">
+                        <span *ngIf="myReactiveForm.get('currentstack').errors">*Select Your Current Stack</span>
+                    </small>
+                </div>
+                <div class="form-group col-md-6 col-sm-12">
+                    <label for="todostack">Todo Stack</label>
+                    <br />
+                    <ng-multiselect-dropdown [settings]="dropdownSettings" [data]="todoList"
+                        (onSelect)="onItemSelectTodo($event)" (onSelectAll)="onSelectAllTodo($event)"
+                        (onDeSelect)="unSelectTodo($event)" (onDeSelectAll)="unSelectAllTodo($event)" id="todostack"
+                        formControlName="todostack">
+                    </ng-multiselect-dropdown>
+                    <br />
+                    <small class="text-danger" *ngIf="
+              !myReactiveForm.get('todostack').valid &&
+              myReactiveForm.get('todostack').touched
+            ">
+                        <span *ngIf="myReactiveForm.get('todostack').errors">Select Todo Stack</span>
+                    </small>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12 col-sm-12">
+                    <label for="linkedinlink">LinkedIn </label>
+                    <br />
+                    <input id="linkedinlink" type="link" class="form-control" formControlName="linkedinlink"
+                        id="linkedinlink" placeholder="LinkedIn" />
+                    <br />
+                    <small class="text-danger"
+                        *ngIf="!myReactiveForm.get('linkedinlink').valid && myReactiveForm.get('linkedinlink').touched">
+                        <span *ngIf="myReactiveForm.get('linkedinlink').errors">*LinkedIn</span>
+                    </small>
+                </div>
+            </div>
+            <!--Detail Section-->
+            <div class="project-details" formArrayName="projectDetailSection">
+                <div class="form-row dynamic"
+                    *ngFor="let ing of myReactiveForm.get('projectDetailSection')['controls']; let i=index"
+                    [formGroupName]='i'>
+
+                    <div class="col-md-5 col-sm-12" style="margin-bottom: 10px;">
+                        <label for="currentprojects">Project Name</label>
+                        <br />
+                        <input id="currentprojects" type="text" class="form-control" formControlName="currentprojects"
+                            id="currentprojects" placeholder="Project Name" />
+
+                        <small class="text-danger"
+                            *ngIf="!myReactiveForm.get('projectDetailSection')['controls'][i].valid && myReactiveForm.get('projectDetailSection')['controls'][i] .touched">
+                            <span
+                                *ngIf="myReactiveForm.get('projectDetailSection')['controls'][i]['controls'].currentprojects.errors && myReactiveForm.get('projectDetailSection')['controls'][i]['controls'].currentprojects.touched">
+                                *Enter Your Current Project</span>
+                        </small>
+                    </div>
+                    <div class="col-md-5 col-sm-12" style="margin-bottom: 10px;">
+                        <label for="projectlead">Project Lead</label>
+                        <br />
+                        <input id="projectlead" type="text" class="form-control" formControlName="projectlead"
+                            id="projectlead" placeholder="Project Lead" />
+                        <small class="text-danger" *ngIf="!myReactiveForm.get('projectDetailSection')['controls'][i].valid 
+                                    && 
+                                    myReactiveForm.get('projectDetailSection')['controls'][i].touched">
+                            <span
+                                *ngIf="myReactiveForm.get('projectDetailSection')['controls'][i]['controls'].projectlead.errors && myReactiveForm.get('projectDetailSection')['controls'][i]['controls'].projectlead.touched">*Enter
+                                Your Project Lead
+                            </span>
+                        </small>
+                    </div>
+                    <div class="col-md-2 col-sm-12" style="margin-bottom:10px;">
+                        <div class="deleteProjectButton">
+                            <button class="btn btn-danger" type="button" (click)="onDeleteProject(i)"
+                                ><i class="fa fa-minus" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="addProjectButton">
+                    <button class="btn btn-primary" type="button" (click)="onAddProject()"
+                        ><i class="fa fa-plus" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-12 col-sm-12">
+                    <div class="main-body">
+                        <div class="card mt-3">
+                            <ul class="list-group list-group-flush">
+                                <li type="button" class="
+                    list-group-item
+                    d-flex
+                    justify-content-between
+                    align-items-center
+                    flex-wrap
+                  " data-toggle="modal" data-target="exampleModalCenter" (click)="open(mymodal)">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col text-center">
+                                                <button class="btn btn-default" class="btn btn-primary"
+                                                    *ngIf="listOfFiles.length == 0">
+                                                    Attach Cv
+                                                </button>
+                                                <div class="image-upload" *ngIf="listOfFiles.length > 0">
+                                                    <p>CV Attachements</p>
+                                                    <img src="assets/img/brand/file-icon.png">
+                                                    <i class="fas fa-file-pdf"></i>
+                                                    <span
+                                                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                        {{listOfFiles.length}}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!--Modal-->
+                    <ng-template #mymodal let-modal>
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="modal-basic-title">Upload CV</h4>
+                            <button type="button" class="close" aria-label="Close"
+                                (click)="modal.dismiss('Cross click')">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="py-1">
+                                <div class="image-upload">
+                                    <label for="cvattachment">
+
+                                        <img src="assets/img/brand/upload.svg" />
+
+                                    </label>
+                                    <input id="cvattachment" class="custom-file-input" type="file"
+                                        formControlName="cvattachment" id="cvattachment" class="icon-cloud-upload"
+                                        (change)="onFileChanged($event)" multiple="multiple" accept="application/pdf" />
+
+                                    <input style="display: none" #attachments type="file"
+                                        (change)="onFileChanged($event)" #fileInput multiple="true"
+                                        accept="application/pdf" />
+                                </div>
+                                <div>Click the upload icon</div>
+                            </div>
+                            <br />
+                            <div *ngFor="let selected of listOfFiles; let index = index" class="px-2">
+                                <div class="row px-1">
+                                    <p class="btn btn-link py-0 my-0" (click)="getFileUrl(index)"
+                                        style="font-size: 20px">
+                                        {{ selected }}
+                                    </p>
+                                    <button class="mat-icon-button border-0" (click)="removeSelectedFile(index)"
+                                        style="background-color: #d3d3d3">
+                                        <img src="assets/img/brand/trash.svg" style="height: 22px" />
+                                    </button>
+                                </div>
+                            </div>
+                            <span *ngIf="file" class="text-danger">
+                                File Size too large, Upload Again!
+                            </span>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">
+                                Ok
+                            </button>
+                        </div>
+                    </ng-template>
+                    <small class="text-danger"
+                        *ngIf="!myReactiveForm.get('cvattachment').valid && myReactiveForm.get('cvattachment').touched">
+                        <span *ngIf="myReactiveForm.get('cvattachment').errors">*Attach Cv</span>
+                    </small>
+                </div>
+            </div>
+
+            <button type="submit" style="float: right" class="btn btn-primary mt-3" (click)="onSubmit()">
+                Submit
+            </button>
+        </form>
+    </div>
+</div>

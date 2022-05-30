@@ -1,33 +1,31 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-
 import { IconSetService } from '@coreui/icons-angular';
-import { iconSubset } from './icons/icon-subset';
-import { Title } from '@angular/platform-browser';
+import { freeSet } from '@coreui/icons';
 
 @Component({
-  // tslint:disable-next-line:component-selector
+  // tslint:disable-next-line
   selector: 'body',
-  template: '<router-outlet></router-outlet>',
+  template: '<ngx-spinner></ngx-spinner><router-outlet></router-outlet>',
+  providers: [IconSetService],
 })
 export class AppComponent implements OnInit {
-  title = 'CoreUI Free Angular Admin Template';
-
+  avatar = { imageUrl: String }
+  loadingText = '';
   constructor(
     private router: Router,
-    private titleService: Title,
-    private iconSetService: IconSetService
+    public iconSet: IconSetService
   ) {
-    titleService.setTitle(this.title);
     // iconSet singleton
-    iconSetService.icons = { ...iconSubset };
+    iconSet.icons = { ...freeSet };
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.router.events.subscribe((evt) => {
       if (!(evt instanceof NavigationEnd)) {
         return;
       }
+      window.scrollTo(0, 0);
     });
   }
 }

@@ -1,7 +1,80 @@
-:host {
-  .legend {
-    small {
-      font-size: x-small;
-    }
-  }
+.chart {
+  height: 90px;
+}
+.announcement{
+  background-color: #f8f9fa; 
+  padding: 15px;
+}
+.sectionBody{
+  display: flex;
+}
+.img{
+  width: 25%;
+  padding-right: 1rem;
+  padding-left: 0.5rem;
+}
+.listDiv{
+  display: inline; 
+  width: 100%;
+  height: 285px; 
+  overflow:auto;
+}
+.d-flex{
+  margin-left: 0%; 
+   width: 100%; 
+}
+.card{
+  background-color: #e9ecef;
+  margin-left: 0%;
+  margin-bottom: 0%; 
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+.card-body{
+  border: black;
+  margin-bottom: 0rem;
+  margin-bottom: 0rem;
+  padding-top: 0.25rem;
+  padding-left: 0rem;
+  padding-bottom: 0.5rem;
+}
+.card-title{
+  cursor: pointer;
+}
+.card-text{
+  margin-left: 2.5rem;
+}
+.announcement-section {
+  background-color: #f8f9fa; 
+  padding: 15px;
+}
+.logo {
+  width: 25%; 
+  padding-right: 1rem;
+  padding-left: 0.5rem; 
+}
+.lists-style {
+  margin-left: 0%;  
+  width: 100%;
+}
+.announcement-card {
+  background-color: #e9ecef; 
+  margin-left: 0%; 
+  margin-bottom: 0%; 
+  width: 100%;
+  margin-bottom: 0.5rem; 
+}
+.announcement-body {
+  border: black; 
+  margin-bottom: 0rem; 
+  margin-bottom: 0rem;
+  padding-top: 0.25rem;
+  padding-left: 0rem;
+  padding-bottom: 0.5rem;
+}
+.title-body {
+  cursor: pointer;
+}
+.promotion-icon {
+  margin-right: 0.5rem;
 }

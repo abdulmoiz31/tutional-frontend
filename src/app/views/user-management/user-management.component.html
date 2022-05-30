@@ -1,0 +1,128 @@
+<div class="container parent-div row">
+    <div class="header-div">
+        <h2 class="heading">User Management</h2>
+        <div class="input-group text-center input-div">
+            <button *ngIf="isAdmin" class="btn btn-outline-dark rounded-lg batn" type="button"
+                (click)="open(userSignup)"><i class="fa fa-plus"></i>
+                Add User</button>
+            <input #searchContent type="text" class="search-input form-control form control-sm"
+                (keyup)="filterDatatable($event)" placeholder="Search for...">
+        </div>
+    </div>
+    <div class="material container table-div">
+        <ngx-datatable #table class="material fullscreen ngx-table" [rows]="data" [loadingIndicator]="loadingIndicator"
+            [columns]="columns" [columnMode]="ColumnMode.force" rowHeight="auto" [reorderable]="reorderable"
+            [externalPaging]="false" [limit]="12" [headerHeight]="50" [footerHeight]="50" rowHeight="auto"
+            [rowHeight]="50" [scrollbarH]="true">
+            <ngx-datatable-column name="Emp ID" prop='emp_id'>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Email" prop='username'>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Designation" prop='designation'>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Current Stack" prop='stack'>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Actions" prop="name">
+                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                    <button type="button" class="btn btn-outline-success" (click)='edit(data[rowIndex].emp_id)'
+                        *ngIf="isAdmin"><i class="fa fa-edit"></i> Edit</button>
+                    <button type="button" class="btn btn-outline-primary view-table-btn" (click)='userDetail(data[rowIndex].emp_id)'><i
+                            class="fa fa-eye"></i> View</button>
+                </ng-template>
+            </ngx-datatable-column>
+
+        </ngx-datatable>
+    </div>
+    <!--Modal-->
+    <ng-template #userSignup let-modal>
+        <div class="modal-header">
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="mx-auto">
+                <div class="card mx-4">
+                    <div class="card-body p-4">
+                        <form [formGroup]="signupForm">
+                            <h1>Register</h1>
+                            <p class="text-muted">Create account</p>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="icon-user"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Username" autocomplete="username"
+                                    formControlName="username" required>
+                            </div>
+                            <small class="text-danger m-0 p-0"
+                                *ngIf="!signupForm.get('username').valid && signupForm.get('username').touched">
+                                <span *ngIf="signupForm.get('username').errors ">*Enter a username</span>
+                            </small>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-male" aria-hidden="true"></i></span>
+                                </div>
+                                <select name="userType" id="user_types" class="form-control" formControlName="usertype"
+                                    required>
+                                    <option [ngValue]="null" [disabled]="true">Select User Type</option>
+                                    <option value="associate">Associate</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                            </div>
+                            <small class="text-danger m-0 p-0"
+                                *ngIf="!signupForm.get('usertype').valid && signupForm.get('usertype').touched">
+                                <span *ngIf="signupForm.get('usertype').errors ">*Select User type</span>
+                            </small>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-briefcase"
+                                            aria-hidden="true"></i></span>
+                                </div>
+                                <select name="designation" id="user_designations" class="form-control"
+                                    formControlName="designation" required>
+                                    <option [ngValue]="null" [disabled]="true">Select User Designation</option>
+                                    <option value="{{item._id}}" *ngFor="let item of designations">
+                                        {{item.designation_Name}}
+                                    </option>
+                                </select>
+                            </div>
+                            <small class="text-danger m-0 p-0"
+                                *ngIf="!signupForm.get('designation').valid && signupForm.get('designation').touched">
+                                <span *ngIf="signupForm.get('designation').errors ">*Select Designation</span>
+                            </small>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-address-card"></i></span>
+                                </div>
+                                <input type="number" class="form-control" placeholder="Employee ID" min="0"
+                                    formControlName="employeeId" required>
+                            </div>
+                            <small class="text-danger m-0 p-0"
+                                *ngIf="!signupForm.get('employeeId').valid && signupForm.get('employeeId').touched">
+                                <span *ngIf="signupForm.get('employeeId').errors ">*Employee ID cannot be empty</span>
+                            </small>
+                            <div class="input-group mt-4">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="icon-lock"></i></span>
+                                </div>
+                                <input type="password" class="form-control" placeholder="Password"
+                                    formControlName="password" required>
+                            </div>
+                            <small class="text-danger m-0 p-0"
+                                *ngIf="!signupForm.get('password').valid && signupForm.get('password').touched">
+                                <span *ngIf="signupForm.get('password').errors ">*Enter a valid Password Length
+                                    (8-40)</span>
+                            </small>
+                            <button type="button" class="btn btn-block btn-success mt-4" (click)="signupUser()">Create
+                                Account</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
+        </div>
+    </ng-template>
+</div>

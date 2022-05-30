@@ -1,0 +1,50 @@
+<div class="app-body bg-white">
+  <section class="loginSection">
+    <div class="row">
+      <div class="col-md-6 mx-auto full-height">
+        <div class="card-group">
+          <div class="card p-4">
+            <div class="card-body">
+              <form [formGroup]="loginForm" (ngSubmit)="loginUser()">
+                <h1>Login</h1>
+                <p class="text-muted">Sign In to your account</p>
+                <div class="input-group min-size">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="icon-user"></i></span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="Email" autocomplete="email"
+                    formControlName="email" required>
+                </div>
+                <small class="text-danger m-0 p-0"
+                  *ngIf="!loginForm.get('email').valid && loginForm.get('email').touched">
+                  <span *ngIf="loginForm.get('email').errors ">*Enter a valid Email Address</span>
+                </small>
+                <div class="input-group mt-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="icon-lock"></i></span>
+                  </div>
+                  <input type="password" class="form-control" placeholder="Password" autocomplete="current-password"
+                    formControlName="password" required>
+                </div>
+                <small class="text-danger m-0 p-0"
+                  *ngIf="!loginForm.get('password').valid && loginForm.get('password').touched">
+                  <span *ngIf="loginForm.get('password').errors ">*Enter a valid Password Length (8-40)</span>
+                </small>
+                <div class="row mt-4">
+                  <div class="col-6">
+                    <button type="submit" class="btn btn-primary px-4">Login</button>
+                  </div>
+                  <div class="col-6 text-right">
+                    <button type="button" class="btn btn-link px-0">Forgot password?</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 image-div">
+      </div>
+    </div>
+  </section>
+</div>

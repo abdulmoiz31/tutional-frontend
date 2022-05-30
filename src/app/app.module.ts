@@ -1,104 +1,81 @@
+import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HashLocationStrategy, LocationStrategy, PathLocationStrategy } from '@angular/common';
-import { BrowserModule, Title } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ReactiveFormsModule } from '@angular/forms';
-
-import {
-  PERFECT_SCROLLBAR_CONFIG,
-  PerfectScrollbarConfigInterface,
-  PerfectScrollbarModule,
-} from 'ngx-perfect-scrollbar';
-
-// Import routing module
-import { AppRoutingModule } from './app-routing.module';
-
-// Import app component
+import { LocationStrategy, HashLocationStrategy } from '@angular/common';
+import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+import { UserManagementModule } from './views/user-management/user-management.module';
+import { IconModule, IconSetModule, IconSetService } from '@coreui/icons-angular';
 import { AppComponent } from './app.component';
-
 // Import containers
-import {
-  DefaultFooterComponent,
-  DefaultHeaderComponent,
-  DefaultLayoutComponent,
-} from './containers';
+import { DefaultLayoutComponent } from './containers';
+import { P404Component } from './views/error/404.component';
+import { P500Component } from './views/error/500.component';
+import { LoginComponent } from './views/login/login.component';
+import { HttpClientModule } from '@angular/common/http';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
-import {
-  AvatarModule,
-  BadgeModule,
-  BreadcrumbModule,
-  ButtonGroupModule,
-  ButtonModule,
-  CardModule,
-  DropdownModule,
-  FooterModule,
-  FormModule,
-  GridModule,
-  HeaderModule,
-  ListGroupModule,
-  NavModule,
-  ProgressModule,
-  SharedModule,
-  SidebarModule,
-  TabsModule,
-  UtilitiesModule,
-} from '@coreui/angular';
 
-import { IconModule, IconSetService } from '@coreui/icons-angular';
-
-const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
-  suppressScrollX: true,
-};
 
 const APP_CONTAINERS = [
-  DefaultFooterComponent,
-  DefaultHeaderComponent,
-  DefaultLayoutComponent,
+  DefaultLayoutComponent
 ];
+import {
+  AppHeaderModule,
+  AppSidebarModule,
+} from '@coreui/angular';
+// Import routing module
+import { AppRoutingModule } from './app.routing';
+// Import 3rd party components
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+import { ChartsModule } from 'ng2-charts';
+import { ChangePasswordComponent } from './views/change-password/change-password.component';
+import { TutorialsComponent } from './views/tutorials/tutorials.component';
+import { LovManagementModule } from './views/lov-management/lov-management.module';
+import { TutorialsManagementModule } from './views/tutorials-management/tutorials-management.module';
+import { AnnouncementManagementComponent } from './views/announcement-management/announcement-management.component';
+import { AnnouncementManagementModule } from './views/announcement-management/announcement-management.module';
 
 @NgModule({
-  declarations: [AppComponent, ...APP_CONTAINERS],
   imports: [
     BrowserModule,
-    BrowserAnimationsModule,
     AppRoutingModule,
-    AvatarModule,
-    BreadcrumbModule,
-    FooterModule,
-    DropdownModule,
-    GridModule,
-    HeaderModule,
-    SidebarModule,
-    IconModule,
+    AppHeaderModule,
+    AppSidebarModule,
     PerfectScrollbarModule,
-    NavModule,
-    ButtonModule,
-    FormModule,
-    UtilitiesModule,
-    ButtonGroupModule,
-    ReactiveFormsModule,
-    SidebarModule,
-    SharedModule,
-    TabsModule,
-    ListGroupModule,
-    ProgressModule,
-    BadgeModule,
-    ListGroupModule,
-    CardModule,
+    BsDropdownModule.forRoot(),
+    TabsModule.forRoot(),
+    ChartsModule,
+    IconModule,
+    IconSetModule.forRoot(),
+    UserManagementModule,
+    LovManagementModule,
+    HttpClientModule,
+    NgxSpinnerModule,
+    BrowserAnimationsModule,
+    TutorialsManagementModule,
+    NgxDatatableModule,
+    AnnouncementManagementModule
+  ],
+
+  declarations: [
+    AppComponent,
+    ...APP_CONTAINERS,
+    P404Component,
+    P500Component,
+    LoginComponent,
+    ChangePasswordComponent,
+    TutorialsComponent,
   ],
   providers: [
     {
       provide: LocationStrategy,
       useClass: HashLocationStrategy,
     },
-    {
-      provide: PERFECT_SCROLLBAR_CONFIG,
-      useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG,
-    },
     IconSetService,
-    Title
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
-export class AppModule {
-}
+
+export class AppModule { }

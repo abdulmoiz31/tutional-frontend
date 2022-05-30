@@ -1,0 +1,145 @@
+/* styles.scss */
+/* You can add global styles to this file, and also import other style files */
+@import "~@swimlane/ngx-datatable/index.css";
+@import "~@swimlane/ngx-datatable/themes/material.scss";
+@import "~@swimlane/ngx-datatable/themes/dark.scss";
+@import "~@swimlane/ngx-datatable/themes/bootstrap.scss";
+@import "~@swimlane/ngx-datatable/assets/icons.css";
+
+.heading {
+  display: inline;
+  font-size: xx-large;
+  margin: 0;
+  padding: 0;
+  color: #495057;
+  vertical-align: middle;
+  margin-left: 25px;
+  margin-top: 10px;
+  float: left;
+}
+.batn {
+  display: inline;
+  margin-right: 13px;
+  margin-top: 10px;
+  float: right;
+}
+.parent-div {
+  background-color: white;
+  width: 100%;
+  margin: auto;
+  padding: 10px, 10px;
+}
+.header-div {
+  margin-top: 10px;
+  width: 100%;
+  background-color: #ffffff;
+  min-height: 60px;
+  border-radius: 4px;
+  border: #ced4da 1px solid;
+}
+.search-input {
+  background-color: white;
+  color: #495057;
+  padding: 0;
+  min-width: 250px;
+  display: inline;
+  border-radius: 4px;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  min-height: 35px;
+  font-size: large;
+  margin-right: 10px;
+  border: 1px solid #ced4da;
+  padding-left: 15px;
+  float: right;
+  margin-top: 7px;
+}
+.table-div {
+  text-align: center;
+  width: 100%;
+  padding: 0;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+.ngx-table {
+  background-color: white;
+}
+.column-margin {
+  margin: 80px 10px;
+}
+.footer-div {
+  display: inline;
+  margin: 10px 20px;
+  justify-content: center;
+}
+.input-div {
+  display: inline;
+  padding: 0;
+  margin: 0;
+  margin-left: 20px;
+}
+.ngx-datatable.material {
+  box-shadow: none !important;
+  border: 1px solid #dddddd;
+  .datatable-header {
+    .datatable-header-cell {
+      border: 1px solid #dedede;
+      text-align: center !important;
+    }
+    .datatable-row-left {
+      background-image: none !important;
+    }
+  }
+  .datatable-body {
+    .datatable-body-row {
+      .datatable-body-cell {
+        border: 1px solid #dedede;
+        border-width: 0px 1px 0px 0px;
+      }
+      & > div {
+        display: flex;
+        border-bottom: 1px solid #dddddd;
+      }
+    }
+  }
+  input[type="checkbox"] {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+.datatable-header-cell-template-wrap {
+  color: black;
+  font-size: 14px;
+}
+.ngx-datatable.material.single-selection .datatable-body-row.active,
+.ngx-datatable.material.single-selection
+  .datatable-body-row.active
+  .datatable-row-group,
+.ngx-datatable.material.multi-selection .datatable-body-row.active,
+.ngx-datatable.material.multi-selection
+  .datatable-body-row.active
+  .datatable-row-group,
+.ngx-datatable.material.multi-click-selection .datatable-body-row.active,
+.ngx-datatable.material.multi-click-selection
+  .datatable-body-row.active
+  .datatable-row-group {
+  background-color: #afcfa9 !important;
+  color: #ffffff !important;
+}
+.ngx-datatable.material .datatable-header .datatable-header-cell {
+  border: 1px solid #dedede;
+  border-width: 0px 1px 0px 0px;
+}
+.ngx-datatable .datatable-footer .datatable-pager {
+  flex: none;
+}
+.ngx-datatable .datatable-footer .page-count {
+  flex: none;
+}
+input.ng-touched.ng-invalid {
+  border: 1px solid red;
+  box-shadow: 0 0 13px inset rgba(255, 0, 0, 0.2);
+}
+.delete-table-btn {
+  margin-left: 0.5rem;
+}

@@ -1,0 +1,185 @@
+<div class="container parent-div row">
+    <div class="header-div">
+        <h2 class="heading">Tutorial Management</h2>
+        <div class="input-group text-center input-div">
+            <button *ngIf="isAdmin" class="btn btn-outline-dark rounded-lg batn" type="button"
+                (click)="open(tutorialFormA,-1)"><i class="fa fa-plus"></i>
+                Add Tutorial</button>
+            <input #searchContent type="text" class="search-input form-control form control-sm"
+                (keyup)="filterDatatable($event)" placeholder="Search for...">
+        </div>
+    </div>
+    <div class="material container table-div ">
+        <ngx-datatable #table class="material fullscreen ngx-table" [rows]="data1" [loadingIndicator]="loadingIndicator"
+            [columns]="columns" [columnMode]="ColumnMode.force" rowHeight="auto" [reorderable]="reorderable"
+            [externalPaging]="false" [limit]="12" [headerHeight]="50" [footerHeight]="50" rowHeight="auto"
+            [rowHeight]="50" [scrollbarH]="true">
+            <ngx-datatable-column name="Tutorial ID" prop='tutorial_id'>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Tutorial Name" prop='tutorial_name'>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Tutorial URL" prop='tutorial_url'>
+                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+
+                    <a href="{{value}}" target="_blank">{{value}}</a>
+
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Actions" prop="name">
+                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                    <button type="button" class="btn btn-outline-success" (click)='open(updateTutorialpop, rowIndex)'
+                        *ngIf="isAdmin"><i class="fa fa-edit"></i> Edit</button>
+                    <button type="button" class="btn btn-outline-danger delete-table-btn"
+                        (click)="openForDelete(delete, rowIndex)">Delete</button>
+                </ng-template>
+            </ngx-datatable-column>
+
+        </ngx-datatable>
+    </div>
+    <!--Modal-->
+    <ng-template #tutorialFormA let-modal>
+        <div class="modal-header">
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="mx-auto">
+                <div class="card mx-4">
+                    <div class="card-body p-4">
+                        <form [formGroup]="tutorialForm">
+                            <h1>Tutorial</h1>
+                            <p class="text-muted">Add Tutorial</p>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-file-text-o"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Tutorial Name"
+                                    autocomplete="tutorial_name" formControlName="tutorial_name" required>
+                            </div>
+                            <small class="text-danger m-0 p-0"
+                                *ngIf="!tutorialForm.get('tutorial_name').valid && tutorialForm.get('tutorial_name').touched">
+                                <span *ngIf="tutorialForm.get('tutorial_name').errors ">*Enter Tutorial Name</span>
+                            </small>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-link"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Tutorial Url"
+                                    formControlName="tutorial_url" required>
+                            </div>
+                            <small class="text-danger m-0 p-0"
+                                *ngIf="!tutorialForm.get('tutorial_url').valid && tutorialForm.get('tutorial_url').touched">
+                                <span *ngIf="tutorialForm.get('tutorial_url').errors ">*Enter Valid URL</span>
+                            </small>
+                            <button type="button" class="btn btn-block btn-success mt-4" (click)="addTutorial()">Add
+                                Tutorial</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
+        </div>
+    </ng-template>
+
+    <!-- Delete Modal-->
+    <ng-template #delete let-modal>
+        <div class="modal-header">
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="mx-auto">
+                <div class="card mx-4">
+                    <div class="card-body p-4">
+                        <form [formGroup]="updateTutorialForm">
+                            <h1>Sure To Delete Tutorial?</h1>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-file-text-o"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Tutorial Name"
+                                    autocomplete="tutorial_name" formControlName="tutorial_name" required>
+                            </div>
+                            <small class="text-danger m-0 p-0"
+                                *ngIf="!updateTutorialForm.get('tutorial_name').valid && updateTutorialForm.get('tutorial_name').touched">
+                                <span *ngIf="updateTutorialForm.get('tutorial_name').errors ">*Enter Tutorial
+                                    Name</span>
+                            </small>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-link"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Tutorial Url"
+                                    formControlName="tutorial_url" required>
+                            </div>
+                            <small class="text-danger m-0 p-0"
+                                *ngIf="!updateTutorialForm.get('tutorial_url').valid && updateTutorialForm.get('tutorial_url').touched">
+                                <span *ngIf="updateTutorialForm.get('tutorial_url').errors ">*Enter Valid URL</span>
+                            </small>
+                            <button type="button" class="btn btn-block btn-danger mt-4"
+                                (click)="deleteTutorial()">Delete
+                                Tutorial</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+
+
+    <!-- Modal Edit-->
+    <ng-template #updateTutorialpop let-modal>
+        <div class="modal-header">
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="mx-auto">
+                <div class="card mx-4">
+                    <div class="card-body p-4">
+                        <form [formGroup]="updateTutorialForm">
+                            <h1>Tutorial</h1>
+                            <p class="text-muted">Update Tutorial Info</p>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-file-text-o"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Tutorial Name"
+                                    autocomplete="tutorial_name" formControlName="tutorial_name" required>
+                            </div>
+                            <small class="text-danger m-0 p-0"
+                                *ngIf="!updateTutorialForm.get('tutorial_name').valid && updateTutorialForm.get('tutorial_name').touched">
+                                <span *ngIf="updateTutorialForm.get('tutorial_name').errors ">*Enter Tutorial
+                                    Name</span>
+                            </small>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-link"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Tutorial Url"
+                                    formControlName="tutorial_url" required>
+                            </div>
+                            <small class="text-danger m-0 p-0"
+                                *ngIf="!updateTutorialForm.get('tutorial_url').valid && updateTutorialForm.get('tutorial_url').touched">
+                                <span *ngIf="updateTutorialForm.get('tutorial_url').errors ">*Enter Valid URL</span>
+                            </small>
+                            <button type="button" class="btn btn-block btn-success mt-4"
+                                (click)="updateTutorial()">Update
+                                Tutorial</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
+        </div>
+    </ng-template>
+</div>
