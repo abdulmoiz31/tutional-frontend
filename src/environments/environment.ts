@@ -5,5 +5,5 @@
 
 export const environment = {
   production: false,
-  baseUrl: 'http://localhost:5000'
+  baseUrl: 'https://team-managment-portal.herokuapp.com'
 };
