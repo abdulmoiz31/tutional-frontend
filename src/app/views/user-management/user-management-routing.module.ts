@@ -13,7 +13,7 @@ const routes: Routes = [
         }
     },
     {
-        path: 'user-detail/:id',
+        path: 'user-detail',
         component: UserDetailComponent,
         data: {
             title: 'User Detail View'

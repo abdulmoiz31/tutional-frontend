@@ -1,5 +1,6 @@
 export const userTypes = {
-    admin: '619de9f2670a1d637f81956f',
-    associate: '619deb7b097691b613b3389f'
+    admin: "e997e60e6d10e43308a1af92fb4e82",
+    teacherUser: "169d31d95d989c3384eb1b63d5e21b",
+    studentUser: "287124a33483c2a86d76b7dd0e1646"
 }
 

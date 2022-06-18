@@ -8,7 +8,7 @@ import { environment } from "../../../environments/environment";
 @Injectable()
 export class UserManagementService {
     BASE_URL = environment.baseUrl;
-    USER_URL = this.BASE_URL + '/users/';
+    USER_URL = this.BASE_URL + '/admin';
     STACK_LOV_URL = this.BASE_URL + '/public/lov/stack';
     DESIGNATION_LOV_URL = this.BASE_URL + '/public/lov/designations';
     LOCATION_LOV__URL = this.BASE_URL + '/public/lov/locations';
@@ -17,9 +17,9 @@ export class UserManagementService {
     UPDATE_LOCATION_URL = this.BASE_URL + '/admin/add-location';
     UPDATE_DESIGNATION_URL = this.BASE_URL + '/admin/add-designation';
     UPDATE_URL = this.BASE_URL + '/users';
-    SIGNUP_URL = this.BASE_URL + '/auth/signup';
-    PROFILE_PICTURE_URL = this.USER_URL + 'profile_picture/';
-    DELETE_USER = this.BASE_URL + '/admin/';
+    SIGNUP_URL = this.BASE_URL + '/signup';
+    PROFILE_PICTURE_URL = this.BASE_URL + '/images/upload';
+    DELETE_USER = this.USER_URL + '/delete/';
     
     constructor(private http: HttpClient, private authentication: AuthenticationService) {};
 
@@ -27,13 +27,22 @@ export class UserManagementService {
         return this.http.get(this.USER_URL + id, { headers: new HttpHeaders({ 'Authorization': 'Bearer ' + this.authentication.getAuthToken() }) });
     }
     
-    getUsers(accessToken): Observable<string[]> {
+    getStudents(accessToken): Observable<string[]> {
         const httpOptions = {
             headers: new HttpHeaders({
                 Authorization: 'Bearer ' + accessToken
             }),
         };
-        return this.http.get<string[]>(this.USER_URL, httpOptions);
+        return this.http.get<string[]>(`${this.USER_URL}${'/students'}`, httpOptions);
+    }
+
+    getTeachers(accessToken): Observable<string[]> {
+        const httpOptions = {
+            headers: new HttpHeaders({
+                Authorization: 'Bearer ' + accessToken
+            }),
+        };
+        return this.http.get<string[]>(`${this.USER_URL}${'/teachers'}`, httpOptions);
     }
 
     getStackLov(accessToken): any {
@@ -122,21 +131,38 @@ export class UserManagementService {
         }
     }
 
-    signup(formData) {
-        let usertype = formData.usertype;
-        if (usertype == "admin") {
-            usertype = userTypes.admin;
-        }
-        if (usertype == "associate") {
-            usertype = userTypes.associate;
-        }
-        return this.http.post(this.SIGNUP_URL, {
-            "username": String(formData.username),
-            "password": String(formData.password),
-            "emp_Id": String(formData.employeeId),
-            "user_Type": String(usertype),
-            "designation": String(formData.designation)
-        });
+    studentSignup(formData) {
+        const httpOptions = {
+            headers: new HttpHeaders({
+                Authorization: 'Bearer ' + this.authentication.getAuthToken()
+            }),
+        };
+        
+        return this.http.post(`${this.SIGNUP_URL}${'/student'}`, {
+            email: String(formData.email),
+            password: String(formData.password),
+            name: String(formData.name),
+            session: String(formData.session),
+            admissionSession: String(formData.admissionSession),
+            studentId: String(formData.studentId),
+            grade: formData.grade,
+            isDisabled: false
+        }, httpOptions);
+    }
+
+    teacherSignup(formData) {
+        const httpOptions = {
+            headers: new HttpHeaders({
+                Authorization: 'Bearer ' + this.authentication.getAuthToken()
+            }),
+        };
+        
+        return this.http.post(`${this.SIGNUP_URL}${'/teacher'}`, {
+            email: String(formData.email),
+            password: String(formData.password),
+            name: String(formData.name),
+            isDisabled: false
+        }, httpOptions);
     }
 
     getProfilepic(id: number): any {
@@ -148,8 +174,8 @@ export class UserManagementService {
         return this.http.get(`${this.PROFILE_PICTURE_URL}${id}`, httpOptions);
     };
 
-    uploadProfilePic(file: String, id: number) {
-        return this.http.post(this.PROFILE_PICTURE_URL + id, { 'base64String': file }, { headers: new HttpHeaders({ 'Authorization': 'Bearer ' + this.authentication.getAuthToken() }) });
+    uploadProfilePic(file: String, format) {
+        return this.http.post(this.PROFILE_PICTURE_URL, { image: file, imageformat: format}, { headers: new HttpHeaders({ 'Authorization': 'Bearer ' + this.authentication.getAuthToken() }) });
     };
 
     updateLocation(formData, id: number) {
@@ -164,8 +190,12 @@ export class UserManagementService {
             }, { headers: new HttpHeaders({ 'Authorization': 'Bearer ' + this.authentication.getAuthToken() }) });
     };
 
-    deleteUser(id: number) {
-        return this.http.delete(this.DELETE_USER + id,
-            { headers: new HttpHeaders({ 'Authorization': 'Bearer ' + this.authentication.getAuthToken() }) });
+    deleteUser(email) {
+        const httpOptions = {
+            headers: new HttpHeaders({
+                Authorization: 'Bearer ' + this.authentication.getAuthToken()
+            }),
+        };
+        return this.http.delete(`${this.DELETE_USER}${email}`, httpOptions);
     };
 };

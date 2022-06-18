@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
 
   constructor(private authentication: AuthenticationService, private router: Router, private spinner: NgxSpinnerService,
     private utillservice: UtillsService, private dataservice: DataService) {
-    //this.logout();
+    this.logout();
   }
 
   ngOnInit(): void {
@@ -34,9 +34,9 @@ export class LoginComponent implements OnInit {
       this.authentication.login(this.loginForm.value).subscribe((resData: any) => {
         this.spinner.hide();
         this.authentication.setAuthToken(resData.token);
-        //added toastr for successful login
+        this.authentication.setUser(resData.user)
         this.utillservice.showSuccess(resData.message);
-        this.dataservice.setAvatarUrl(resData.profilePictureUrl);
+        this.dataservice.setAvatarUrl(resData.user.profilePictureUrl);
         this.router.navigate(['/dashboard']);
       },
         error => {

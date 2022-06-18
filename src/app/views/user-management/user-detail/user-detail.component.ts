@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { AuthenticationService } from '../../../common/authentication-service.service';
 import { DataService } from '../../../common/dataservice.service';
 import { UtillsService } from '../../../common/utills-service.service';
+import { subjects } from '../../../constants/ids.constants';
 import { UserManagementService } from '../user-management-service-rest';
 
 @Component({
@@ -15,7 +16,7 @@ import { UserManagementService } from '../user-management-service-rest';
 })
 export class UserDetailComponent implements OnInit, OnDestroy {
   @ViewChild("infoModal") infoModal: TemplateRef<any>;
-  profile = { fullname: '', email: '', contact: '', experience: '', designation: '', center: '', currentStack: [], todoStack: [], linkedin: '', current_projects: [] }
+  profile = { fullname: '', email: '', contact: '', admissionSession: '', session: '', grade: '', subjects: [], todoStack: [], linkedin: '', current_projects: [] }
   modalStack = "";
   modalLead = "";
   modalDesignation = "";
@@ -31,8 +32,6 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   imageURL: string = "";
   subscription: Subscription;
   hasDeleteAccess: boolean = false;
-  userDataFetched = false;
-  userPictureFetched = false;
 
   constructor(
     private modalService: NgbModal,
@@ -42,39 +41,45 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     private authentication: AuthenticationService,
     private utillService: UtillsService,
     private dataservice: DataService,
-    private router: Router,
+    private router: Router
   ) {
 
   };
 
   ngOnInit(): void {
-    this.subscription = this._Activatedroute.params.subscribe(params => {
-      this.id = params.id;
-      this.getProfilePicture();
-      this.getUserData();
-      this.getAllCvs(this.id);
-      if (this.authentication.getUser().emp_id == this.id || this.authentication.isAdmin()) {
-        this.hasEditAccess = true;
-      }
-      else {
-        this.hasEditAccess = false;
-      };
+    // this.subscription = this._Activatedroute.params.subscribe(params => {
+    //   this.id = params.id;
+    //   this.getProfilePicture();
+      
+    //   if (this.authentication.getUser().emp_id == this.id || this.authentication.isAdmin()) {
+    //     this.hasEditAccess = true;
+    //   }
+    //   else {
+    //     this.hasEditAccess = false;
+    //   };
 
-      //calling function to get users' profile pic
-      //for checking whether login user id is same as of current user whose details are open
-      if (this.id === this.authentication.getUser().emp_id) {
-        //meaning loggedin user and emp whose detail section is currently in view, both are same
-        //so display edit image button
-        this.displayEditButton = true;
-      }
-      else {
-        this.displayEditButton = false;
-      };
+    //   //calling function to get users' profile pic
+    //   //for checking whether login user id is same as of current user whose details are open
+    //   if (this.id === this.authentication.getUser().emp_id) {
+    //     //meaning loggedin user and emp whose detail section is currently in view, both are same
+    //     //so display edit image button
+    //     this.displayEditButton = true;
+    //   }
+    //   else {
+    //     this.displayEditButton = false;
+    //   };
 
-      if (this.authentication.isAdmin() && this.authentication.getUser().emp_id !== this.id) {
-        this.hasDeleteAccess = true;
-      }
-    })
+    //   
+    // })
+    if (this.authentication.isAdmin() && this.authentication.getUser().email !== this.dataservice.getCurrentUser().email) {
+      this.hasDeleteAccess = true;
+      this.hasEditAccess = true;
+    }
+    if (this.authentication.getUser().email == this.dataservice.getCurrentUser().email) {
+      this.displayEditButton = true
+    }
+
+    this.populateData(this.dataservice.getCurrentUser())
   };
 
   ngOnDestroy() {
@@ -113,7 +118,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
 
   deleteUser() {
     this.spinner.show();
-    this.fetchData.deleteUser(this.id)
+    this.fetchData.deleteUser(this.dataservice.getCurrentUser().email)
       .subscribe(
         (resData: any) => {
           this.spinner.hide();
@@ -136,11 +141,12 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     }
     else {
       let name = imageFile[0].name;
+      var ext =  name.split('.').pop();
       let size = imageFile[0].size;
       let kbSize = Math.round(size / 1024);
       let mbSize = Math.round(kbSize / 1024);
       if (mbSize <= 60) {
-        this.uploadPic(imageFile[0], this.id);
+        this.uploadPic(imageFile[0], ext);
       }
       else {
         this.utillService.showError('file size is greator than 200mb');
@@ -177,27 +183,18 @@ export class UserDetailComponent implements OnInit, OnDestroy {
       return `with: ${reason}`;
     }
   }
-  getUserData() {
-    this.spinner.show();
-    this.fetchData.fetchUserdetail(this.id).subscribe((resData: any) => {
-      this.populateData(resData);
-    },
-      error => {
-        this.spinner.hide();
-      });
-  }
 
-  uploadPic(file: File, id: number) {
+  uploadPic(file: File, format) {
     this.spinner.show();
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
       let data: any = reader.result;
       let base64data = data.split('base64,')[1];
-      this.fetchData.uploadProfilePic(String(base64data), id)
+      this.fetchData.uploadProfilePic(String(base64data), format)
         .subscribe(
           (resData: any) => {
-            this.imageURL = `${"data:image/png;base64,"}${resData.profile_Picture}`;
+            this.imageURL = resData.url;
             this.profilePicAvailable = true;
             this.dataservice.updateProfilePicture(resData.profile_Picture);
             this.spinner.hide();
@@ -211,60 +208,26 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     }
   };
   populateData(data) {
-    this.profile.email = data.username;
-    this.profile.contact = data.contact_num;
-    this.profile.linkedin = data.linkedin_URL;
-    this.profile.experience = data.experience;
-    this.profile.center = data.city?.l_Name;
-    this.profile.fullname = data.username;
-    this.profile.designation = data.designation?.designation_Name;
-    let projects = data.Current_Projects;
-    let leads = data.project_Lead;
-    let designation = data?.designation?.designation_Name;
-    let current_stacks = data.current_Stack;
-    let todo_stacks = data.to_Do_Stack;
-    for (let index = 0; index < projects.length; index++) {
-      let current_project_format = { name: '', lead: '', stack: '', designation: '' };
-      current_project_format.name = projects[index].project_Name;
-      current_project_format.designation = designation;
-      current_project_format.lead = leads[index].p_Lead_Name;
-      this.profile.current_projects.push(current_project_format);
-    }
-    for (let index = 0; index < current_stacks.length; index++) {
-      this.profile.currentStack.push(current_stacks[index].stack_detail?.s_Name);
-    }
-    for (let index = 0; index < todo_stacks.length; index++) {
-      this.profile.todoStack.push(todo_stacks[index].stack_detail?.s_Name);
-    }
-    this.userDataFetched = true;
-    if (this.userPictureFetched && this.userDataFetched) {
-      this.spinner.hide();
-    }
+    this.profile.fullname = data.name;
+    this.profile.email = data.email;
+    this.profile.contact = data.phoneNumber;
+    this.profile.admissionSession = data.admissionSession;
+    this.profile.session = data.session;
+    this.profile.grade = data.grade;
+    let tempsSubjects = data.subjects;
+    tempsSubjects?.forEach(element => {
+      this.profile.subjects.push(subjects[element.id].name)
+    });
   }
   getUserID() {
     return this.id;
   }
 
   getProfilePicture() {
-    this.spinner.show();
-    this.fetchData.getProfilepic(this.id)
-      .subscribe(
-        (data: any) => {
-          if (data !== null && data != "") {
-            this.profilePicAvailable = true;
-            this.imageURL = `${"data:image/png;base64,"}${data}`;
-            this.userPictureFetched = true;
-            if (this.userPictureFetched && this.userDataFetched) {
-              this.spinner.hide();
-            }
-          }
-          else { this.profilePicAvailable = false; }
-        },
-        error => {
-          this.spinner.hide();
-          this.utillService.showError(error.statusText);
-        },
-      );
+    this.imageURL = this.dataservice.getAvatarUrl()
+    if (this.imageURL != "" || this.imageURL != null) {
+      this.profilePicAvailable = true;
+    }
   }
   getUserId() {
     return this.authentication.getUser().emp_id;

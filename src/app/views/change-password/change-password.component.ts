@@ -41,13 +41,12 @@ export class ChangePasswordComponent implements OnInit {
     this.authentication.changePassword(this.accessToken, this.changePasswordForm.value)
       .subscribe((resData: any) => {
         this.spinner.hide();
-        this.utillservice.showSuccess(resData.status);
+        this.utillservice.showSuccess(resData.message);
         this.router.navigate(['/login']);
-
       },
         error => {
           this.spinner.hide();
-          this.utillservice.showError(error.error.err.message);
+          this.utillservice.showError(error.message);
         })
   }
 }

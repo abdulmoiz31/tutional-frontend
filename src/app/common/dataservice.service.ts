@@ -22,4 +22,12 @@ export class DataService {
     getProfilePictureChangeEmitter() {
         return this.navchange;
     }
+
+    setCurrentUser(user){
+        localStorage.setItem('currentUser', JSON.stringify(user));
+    }
+    
+    getCurrentUser(){
+        return JSON.parse(localStorage.getItem('currentUser'));
+    }
 }

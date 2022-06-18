@@ -11,9 +11,9 @@ import { environment } from '../../environments/environment';
 export class AuthenticationService {
   baseUrl = environment.baseUrl;
   LOGIN_URL = this.baseUrl + '/signin';
-  LOGOUT_URL = this.baseUrl + '/auth/logout';
+  LOGOUT_URL = this.baseUrl + '/signin/logout';
   UPDATE_URL = this.baseUrl + '/users';
-  CHANGE_PASSWORD_URL = this.baseUrl + '/auth/password';
+  CHANGE_PASSWORD_URL = this.baseUrl + '/signin/changepassword';
   accessToken: string = "";
   constructor(private http: HttpClient) { }
   login(formData) {
@@ -48,22 +48,19 @@ export class AuthenticationService {
     this.removeAccessToken();
   }
   isAdmin() {
-    return this.getUser().user_Type == userTypes.admin;
+    return this.getUser().userType == userTypes.admin;
   }
   isAssociateUser() {
-    return this.getUser().user_Type == userTypes.associate;
+    return this.getUser().user_Type == userTypes.teacherUser;
   }
   changePassword(accessToken, formPassword): Observable<any> {
 
     const httpOptions = {
       headers: new HttpHeaders({
-        Authorization: 'Bearer ' + accessToken
-      }),
-
-      "old_password": String(formPassword.old_password),
-      "new_password": String(formPassword.new_password)
+        Authorization: 'Bearer ' + this.getAuthToken()
+      })
     };
-    return this.http.put(this.CHANGE_PASSWORD_URL, formPassword, httpOptions)
+    return this.http.patch(this.CHANGE_PASSWORD_URL,{oldPassword: String(formPassword.old_password), newPassword: String(formPassword.new_password)}, httpOptions)
   }
 }
 

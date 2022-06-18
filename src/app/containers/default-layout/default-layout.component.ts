@@ -30,7 +30,7 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
     }
     let url = this.dataservice.getAvatarUrl();
     if (url != "") {
-      this.avatarUrl = `${"data:image/png;base64,"}${url}`;
+      this.avatarUrl = url;
     }
     this.subscription = this.dataservice.getProfilePictureChangeEmitter()
       .subscribe(item => this.updateAvatar(item)
@@ -45,14 +45,14 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
   logout() {
     this.router.navigate(['/login']);
   }
-  getUserId() {
-    return this.authentication.getUser().emp_id;
+  setCurrentUser(){
+    this.dataservice.setCurrentUser(this.authentication.getUser())
   }
   getNavigationItems() {
-    if (this.authentication.getUser().user_Type == userTypes.admin) {
+    if (this.authentication.getUser().userType = userTypes.admin) {
       return adminNavItems;
     }
-    else if (this.authentication.getUser().user_Type == userTypes.associate) {
+    else if (this.authentication.getUser().user_Type == userTypes.teacherUser) {
       return navItems;
     }
   }

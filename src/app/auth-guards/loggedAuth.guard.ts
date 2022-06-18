@@ -12,7 +12,9 @@ export class LoggedAuthGuard implements CanActivate {
         let currentUser = this.authenticationService.getUser();
         if (currentUser != null) {
             // authorised so return true
-            return true;
+            if (!currentUser.isDisabled) {
+                return true;    
+            }
         }
         // not logged in so redirect to login page with the return url
         this.router.navigate(['/login']);

@@ -7,6 +7,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { UtillsService } from '../../common/utills-service.service';
 import { DOCUMENT } from '@angular/common';
+import { DataService } from '../../common/dataservice.service';
+
 
 @Component({
   selector: 'app-user-management',
@@ -28,7 +30,8 @@ export class UserManagementComponent implements OnInit {
   isAdmin: boolean;
   loadingIndicator = false;
   reorderable = true;
-  columns = [{ name: 'emp_id', sortable: true }, { name: 'username', sortable: true }, { name: 'designation' }, { name: 'stack' }];
+  columns = [{ name: 'studentId', sortable: true }, { name: 'name', sortable: true }, { name: 'session' }, { name: 'admissionSession' }, { name: 'grade' }];
+  
   ColumnMode = ColumnMode;
   users = [];
   filtered_users = [];
@@ -38,7 +41,8 @@ export class UserManagementComponent implements OnInit {
 
   constructor(private modalService: NgbModal,
     private authenticationService: AuthenticationService,
-    private usermanagementservice: UserManagementService, private spinner: NgxSpinnerService, private toaster: UtillsService, @Inject(DOCUMENT) private document: Document
+    private usermanagementservice: UserManagementService, private spinner: NgxSpinnerService, private toaster: UtillsService,
+    @Inject(DOCUMENT) private document: Document, private dataService: DataService
   ) { }
 
   ngOnInit(): void {
@@ -46,14 +50,23 @@ export class UserManagementComponent implements OnInit {
     this.accessToken = this.authenticationService.getAuthToken();
     this.isAdmin = this.authenticationService.isAdmin();
     this.getUsers();
-    this.getDesignations();
+    this.createForm()
+  }
+
+  createForm() {
     this.signupForm = new FormGroup({
-      'password': new FormControl('systems123', [Validators.required, Validators.maxLength(40), Validators.minLength(8)]),
-      'username': new FormControl(null, [Validators.required, Validators.email]),
-      'employeeId': new FormControl(null, [Validators.required]),
-      'usertype': new FormControl(null, [Validators.required]),
-      'designation': new FormControl(null, [Validators.required])
+      password: new FormControl('tutional@123', [Validators.required, Validators.maxLength(40), Validators.minLength(8)]),
+      email: new FormControl(null, [Validators.required, Validators.email]),
+      studentId: new FormControl(null, [Validators.required]),
+      session: new FormControl(null, [Validators.required]),
+      admissionSession: new FormControl(null, [Validators.required]),
+      grade: new FormControl(null, [Validators.required]),
+      name: new FormControl(null, [Validators.required])
     });
+  }
+
+  get signupControls() {
+    return this.signupForm.controls;
   }
 
   edit(id) {
@@ -89,33 +102,28 @@ export class UserManagementComponent implements OnInit {
   getUsers() {
     this.loadingIndicator = true;
     this.filtered_users = [];
-    this.usermanagementservice.getUsers(this.accessToken)
-      .subscribe(userData => {
-        this.users = userData;
-        for (let index = 0; index < this.users.length; index++) {
-          let raw_user = this.users[index];
-          let user = { 'emp_id': '', 'username': '', 'designation': '', 'stack': '' };
-          user['emp_id'] = raw_user.emp_Id;
-          user['username'] = raw_user.username;
-          if (raw_user.designation) {
-            user['designation'] = raw_user.designation.designation_Name;
-          }
-          // user.designation = raw_user.designation.designation_Name
-          let stack = raw_user.current_Stack;
-          let stack_array = [];
-          for (let index = 0; index < stack.length; index++) {
-            const current_stack = stack[index];
-            stack_array.push(current_stack.stack_detail?.s_Name);
-          }
-          user['stack'] = stack_array.join()
-          this.filtered_users.push(user);
-        }
-        this.data = this.filtered_users;
+    this.usermanagementservice.getStudents(this.accessToken)
+      .subscribe((res:any) => {
+        // this.users = res;
+        // for (let index = 0; index < this.users.length; index++) {
+        //   let raw_user = this.users[index];
+        //   let user = { name: '', session: '', studentId: '', grade: '', admissionSession: '', subjects: raw_user.subjects};
+        //   user['name'] = raw_user.name;
+        //   user['session'] = raw_user.session;
+        //   user['studentId'] = raw_user.studentId;
+        //   user['grade'] = raw_user.grade;
+        //   user['admissionSession'] = raw_user.admissionSession;
+        //   this.filtered_users.push(user);
+        // }
+        this.data = res;
+        this.loadingIndicator = false;
+      },(err)=>{
         this.loadingIndicator = false;
       });
   }
-  userDetail(id) {
-    window.open(this.document.location.origin.toString() + '/#/user-management/user-detail/' + id, "_blank");
+  userDetail(user) {
+    this.dataService.setCurrentUser(this.data[user])
+    window.open(this.document.location.origin.toString() + '/#/user-management/user-detail', "_blank");
   }
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {
@@ -137,13 +145,13 @@ export class UserManagementComponent implements OnInit {
   signupUser() {
     if (this.signupForm.status == "VALID") {
       this.spinner.show();
-      this.usermanagementservice.signup(this.signupForm.value).subscribe((resData: any) => {
+      this.usermanagementservice.studentSignup(this.signupForm.value).subscribe((resData: any) => {
         this.spinner.hide();
         this.modalService.dismissAll();
         this.toaster.showSuccess('User Registered')
         this.getUsers();
         this.signupForm.reset();
-        this.signupForm.patchValue({password: "systems123"})
+        this.signupForm.patchValue({password: "tutional@123"})
       },
         error => {
           this.spinner.hide();

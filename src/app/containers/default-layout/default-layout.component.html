@@ -13,7 +13,7 @@
         <img [src]="avatarUrl" class="img-avatar" alt="User" />
       </a>
       <div class="dropdown-menu dropdown-menu-right" *dropdownMenu aria-labelledby="simple-dropdown">
-        <a class="dropdown-item" [routerLink]="['/user-management/user-detail/'+getUserId()]"><i class="fa fa-user"></i>
+        <a class="dropdown-item" (click)="setCurrentUser()" [routerLink]="['/user-management/user-detail']"><i class="fa fa-user"></i>
           Profile</a>
         <a class="dropdown-item" [routerLink]="['/tutorials-list']"><i class="fa fa-book"
             aria-hidden="true"></i>Tutorials</a>

@@ -11,7 +11,7 @@ export class AssociateAuthGuard implements CanActivate {
     ) { }
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
         let currentUser = this.authenticationService.getUser();
-        if (currentUser && currentUser.user_Type == userTypes.associate) {
+        if (currentUser && currentUser.user_Type == userTypes.teacherUser) {
             // authorised so return true
             return true;
         }
