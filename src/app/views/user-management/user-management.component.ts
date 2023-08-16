@@ -8,6 +8,10 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { UtillsService } from '../../common/utills-service.service';
 import { DOCUMENT } from '@angular/common';
 import { DataService } from '../../common/dataservice.service';
+import { CommunicationService } from '../../common/communication.service';
+import { Router } from '@angular/router';
+import { LOVManagementService } from '../../common/lov-service-rest';
+import { LOV } from '../../constants/app.constants';
 
 
 @Component({
@@ -27,6 +31,10 @@ export class UserManagementComponent implements OnInit {
       url: "https://example-file-upload-api"
     }
   };
+
+  admissionSessions = [];
+  sessions = [];
+  grades = [];
   isAdmin: boolean;
   loadingIndicator = false;
   reorderable = true;
@@ -38,17 +46,19 @@ export class UserManagementComponent implements OnInit {
   closeResult: string;
   signupForm: FormGroup;
   designations = [];
-
+  
   constructor(private modalService: NgbModal,
     private authenticationService: AuthenticationService,
     private usermanagementservice: UserManagementService, private spinner: NgxSpinnerService, private toaster: UtillsService,
-    @Inject(DOCUMENT) private document: Document, private dataService: DataService
+    @Inject(DOCUMENT) private document: Document, private dataService: DataService, private commService: CommunicationService,
+    private router: Router, private LOVService: LOVManagementService
   ) { }
 
   ngOnInit(): void {
     this.loggedInUser = this.authenticationService.getUser();
     this.accessToken = this.authenticationService.getAuthToken();
     this.isAdmin = this.authenticationService.isAdmin();
+    this.getLovs()
     this.getUsers();
     this.createForm()
   }
@@ -69,8 +79,39 @@ export class UserManagementComponent implements OnInit {
     return this.signupForm.controls;
   }
 
-  edit(id) {
-    window.open(this.document.location.origin.toString() + '/#/user-management/update-user/' + id, "_blank");
+  edit(user) {
+    this.commService.userUpdateId = this.data[user].email
+    this.router.navigate(['/user-management/update-user']);
+    //window.open(this.document.location.origin.toString() + '/#/user-management/update-user/' + id, "_blank");
+  }
+
+  getLovs(){
+    this.LOVService.getLOV(LOV.ADMISSION_SESSION).subscribe((resData: any) => {
+      this.spinner.hide();
+      this.admissionSessions = resData.lovs;
+    },
+      error => {
+        this.spinner.hide();
+        this.toaster.showError('Unable to fetch Data')
+      });
+
+      this.LOVService.getLOV(LOV.SESSION).subscribe((resData: any) => {
+        this.spinner.hide();
+        this.sessions = resData.lovs;
+      },
+        error => {
+          this.spinner.hide();
+          this.toaster.showError('Unable to fetch Data')
+        });
+
+        this.LOVService.getLOV(LOV.GRADE).subscribe((resData: any) => {
+          this.spinner.hide();
+          this.grades = resData.lovs;
+        },
+          error => {
+            this.spinner.hide();
+            this.toaster.showError('Unable to fetch Data')
+          });
   }
 
   filterDatatable(event) {
@@ -122,8 +163,9 @@ export class UserManagementComponent implements OnInit {
       });
   }
   userDetail(user) {
-    this.dataService.setCurrentUser(this.data[user])
-    window.open(this.document.location.origin.toString() + '/#/user-management/user-detail', "_blank");
+    this.commService.userDetailId = this.data[user].email
+    this.router.navigate(['/user-management/user-detail']);
+    //window.open(this.document.location.origin.toString() + '/#/user-management/user-detail', "_blank");
   }
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {
@@ -145,7 +187,7 @@ export class UserManagementComponent implements OnInit {
   signupUser() {
     if (this.signupForm.status == "VALID") {
       this.spinner.show();
-      this.usermanagementservice.studentSignup(this.signupForm.value).subscribe((resData: any) => {
+      this.usermanagementservice.studentSignup(this.preparePayload()).subscribe((resData: any) => {
         this.spinner.hide();
         this.modalService.dismissAll();
         this.toaster.showSuccess('User Registered')
@@ -159,6 +201,29 @@ export class UserManagementComponent implements OnInit {
         })
     }
   }
+
+  preparePayload(){
+    let payload = this.signupForm.value;
+    payload.isDisabled = false;
+      this.grades.filter((grade)=>{
+        if (grade.lovId == payload.grade) {
+          payload.gradeTitle = grade.lovTitle
+        }
+      })
+      this.admissionSessions.filter((adSession)=>{
+        if (adSession.lovId == payload.admissionSession) {
+          payload.admissionSessionTitle = adSession.lovTitle
+        }
+      })
+      this.sessions.filter((session)=>{
+        if (session.lovId == payload.session) {
+          payload.sessionTitle = session.lovTitle
+        }
+      })
+    
+    return payload;
+  }
+
   getDesignations() {
     this.usermanagementservice.getDesignationLov(this.authenticationService.getAuthToken()).subscribe(
       (resData: any) => {

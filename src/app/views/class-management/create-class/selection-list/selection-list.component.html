@@ -1,0 +1,32 @@
+<div class="container parent-div row">
+    <div class="header-div">
+        <h2 class="heading" *ngIf="stepper == _IDS.STEPPER_TEACHERS">Select Teachers</h2>
+        <h2 class="heading" *ngIf="stepper == _IDS.STEPPER_STUDENTS">Select Students</h2>
+        <div class="input-group text-center input-div">
+            <input #searchContent type="text" class="search-input form-control form control-sm"
+                (keyup)="filterDatatable($event)" placeholder="Search for...">
+        </div>
+    </div>
+    <div class="material container table-div">
+        <ngx-datatable #table class="material fullscreen ngx-table" [rows]="data" [loadingIndicator]="loadingIndicator"
+            [columns]="columns" [columnMode]="ColumnMode.force" rowHeight="auto" [reorderable]="reorderable"
+            [externalPaging]="false" [limit]="12" [headerHeight]="50" [footerHeight]="50" rowHeight="auto"
+            [rowHeight]="50" [scrollbarH]="true">
+
+            <ngx-datatable-column *ngIf="stepper == _IDS.STEPPER_STUDENTS" name="Student ID" prop='studentId'>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Name" prop='name'>
+            </ngx-datatable-column>
+            <ngx-datatable-column *ngIf="stepper == _IDS.STEPPER_STUDENTS" name="Session" prop='session'>
+            </ngx-datatable-column>
+            <ngx-datatable-column *ngIf="stepper == _IDS.STEPPER_STUDENTS" name="Grade" prop='grade'>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Actions" prop="name">
+                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                    <input type="checkbox" [checked]="data[rowIndex].checked" (change)="onCheckBoxClick(rowIndex, $event)">
+                </ng-template>
+            </ngx-datatable-column>
+
+        </ngx-datatable>
+    </div>
+</div>

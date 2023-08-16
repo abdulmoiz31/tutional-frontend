@@ -2,7 +2,6 @@ import { HttpClient, HttpHeaders, HttpRequest } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { AuthenticationService } from "../../common/authentication-service.service"
 import { Observable } from "rxjs";
-import { userTypes } from "../../mapping/userTypes";
 import { environment } from "../../../environments/environment";
 
 @Injectable()

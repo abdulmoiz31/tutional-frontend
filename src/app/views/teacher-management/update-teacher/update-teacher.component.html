@@ -1,0 +1,104 @@
+<div class="container mt-5">
+    <div class="row gutters">
+    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+    <div class="card h-100">
+        <div class="card-body">
+            <div class="account-settings">
+                <div class="user-profile">
+                    <div class="user-avatar">
+                        <img [src]="profilePicAvailable? imageURL: 'https://cdn4.iconfinder.com/data/icons/avatars-xmas-giveaway/128/man_male_avatar_portrait-512.png'">
+                    </div>
+                    <h5 class="user-name">{{profile.fullname}}</h5>
+                    <h6 class="user-email">{{profile.email}}</h6>
+                    <a *ngIf="cvAvailable" [href]="profile.cvUrl" target="_blank" class="btn btn-primary mt-4">Download CV</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+    <div class="card h-100">
+        <div class="card-body">
+            <form [formGroup]="updateTeacherForm">
+            <div class="row gutters">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <h6 class="mb-2 text-primary">Personal Details</h6>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label for="fullName">Full Name</label>
+                        <input type="text" class="form-control" formControlName="name" id="fullName" placeholder="Enter full name">
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label for="phone" >Phone</label>
+                        <input type="text" class="form-control" formControlName="phoneNumber" id="phone" placeholder="Enter phone number" maxlength="11">
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label for="cnic">CNIC</label>
+                        <input type="text" class="form-control" formControlName="cnic" id="cnic" placeholder="Enter CNIC" maxlength="13">
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12" *ngIf="isAdmin">
+                    <div class="form-group row mt-4 ml-1">
+                        <label class="mt-1">Disable/Enable</label>
+                        <label class="switch switch-pill switch-label switch-primary ml-3">
+                            <input type="checkbox" class="switch-input" [checked]="!profile.isDisabled" (click)="onToggle($event)">
+                            <span class="switch-slider" data-checked="&#x2715;" data-unchecked="&#x2713;"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label for="formFile" class="form-label upload-cv-label">Upload CV <i class="fa fa-upload" aria-hidden="true"></i></label>
+                        <input class="upload-cv" type="file" id="formFile" accept="file/pdf, file/docx"
+                            (change)="onEditCV($event.target.files)">
+                    </div>
+                </div>
+            </div>
+            <div class="row gutters" *ngIf="false">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <h6 class="mt-3 mb-2 text-primary">Address</h6>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label for="Street">Street</label>
+                        <input type="name" class="form-control" id="Street" placeholder="Enter Street">
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label for="ciTy">City</label>
+                        <input type="name" class="form-control" id="ciTy" placeholder="Enter City">
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label for="sTate">State</label>
+                        <input type="text" class="form-control" id="sTate" placeholder="Enter State">
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label for="zIp">Zip Code</label>
+                        <input type="text" class="form-control" id="zIp" placeholder="Zip Code">
+                    </div>
+                </div>
+            </div>
+            <div class="row gutters">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="text-right">
+                        <button type="button" id="submit" name="submit" class="btn btn-secondary" [routerLink]="['/teacher-management']" (click)="logFormData()">Cancel</button>
+                        <button type="button" id="submit" name="submit" class="btn btn-primary" (click)="onSubmit()" [disabled]="updateTeacherForm.invalid && !cvAvailable">Update</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>

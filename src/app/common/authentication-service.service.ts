@@ -1,8 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { userTypes } from '../mapping/userTypes';
+
 import { environment } from '../../environments/environment';
+import { USER_TYPES } from '../constants/app.constants';
 @Injectable({
   providedIn: 'root'
 })
@@ -48,10 +49,10 @@ export class AuthenticationService {
     this.removeAccessToken();
   }
   isAdmin() {
-    return this.getUser().userType == userTypes.admin;
+    return this.getUser().userType == USER_TYPES.adminUser;
   }
-  isAssociateUser() {
-    return this.getUser().user_Type == userTypes.teacherUser;
+  isTeacher() {
+    return this.getUser().user_Type == USER_TYPES.teacherUser;
   }
   changePassword(accessToken, formPassword): Observable<any> {
 

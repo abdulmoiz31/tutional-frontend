@@ -4,8 +4,9 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthenticationService } from '../../common/authentication-service.service';
 import { navItems } from '../../_nav';
 import { adminNavItems } from '../../_adminNav';
-import { userTypes } from '../../mapping/userTypes';
+
 import { DataService } from '../../common/dataservice.service';
+import { CommunicationService } from '../../common/communication.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,7 +22,7 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
   //avatar image can be changed for every user
   avatarUrl = "assets/img/avatar/boy.png";
 
-  constructor(private authentication: AuthenticationService, private router: Router, private spinner: NgxSpinnerService, private dataservice: DataService) {
+  constructor(private authentication: AuthenticationService, private router: Router, private spinner: NgxSpinnerService, private dataservice: DataService, private commService: CommunicationService) {
     this.navigationItems = this.getNavigationItems();
   }
   ngOnInit() {
@@ -46,17 +47,18 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
     this.router.navigate(['/login']);
   }
   setCurrentUser(){
+    this.commService.userDetailId = this.authentication.getUser().email
     this.dataservice.setCurrentUser(this.authentication.getUser())
   }
   getNavigationItems() {
-    if (this.authentication.getUser().userType = userTypes.admin) {
+    if (this.authentication.isAdmin()) {
       return adminNavItems;
     }
-    else if (this.authentication.getUser().user_Type == userTypes.teacherUser) {
+    else if (this.authentication.isTeacher()) {
       return navItems;
     }
   }
   updateAvatar(url) {
-    this.avatarUrl = `${"data:image/png;base64,"}${url}`;
+    this.avatarUrl = url;
   }
 };

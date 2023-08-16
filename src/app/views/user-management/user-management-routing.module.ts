@@ -20,7 +20,7 @@ const routes: Routes = [
         }
     },
     {
-        path: 'update-user/:id',
+        path: 'update-user',
         component: UpdateUserComponent,
         data: {
             title: 'Update User'

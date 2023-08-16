@@ -7,23 +7,23 @@ export const adminNavItems: INavData[] = [
     icon: 'icon-home',
   },
   {
-    name: 'User Management',
+    name: 'Student Management',
     url: '/user-management',
     icon: 'icon-user',
   },
   {
-    name: 'Lov Management',
-    url: '/lov-management',
+    name: 'Teacher Management',
+    url: '/teacher-management',
     icon: 'icon-list',
   },
   {
     name: 'Tutorials Management',
-    url: '/tutorials-management',
+    url: '/tutorials-list',
     icon: 'fa fa-book',
   },
   {
-    name: 'Announcements',
-    url: '/announcement-management',
+    name: 'Class Management',
+    url: '/class-management',
     icon: 'fa fa-bullhorn',
   }
 ];

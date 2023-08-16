@@ -24,7 +24,11 @@ export class TutorialsManagementComponent implements OnInit {
   isAdmin: boolean;
   loadingIndicator = false;
   reorderable = true;
-  columns = [{ name: 'tutorial_id', sortable: true }, { name: 'tutorial_name', sortable: true }, { name: 'tutorial_url' }];
+  totalClasses = 20
+  attendedClasses = 15
+  columns = [{ name: 'studentId', sortable: true }, { name: 'studentName', sortable: true }, { name: 'attendance' }];
+  data2 = [{studentId: 21345, studentName: 'Abdul Moiz', attendance: `${(this.attendedClasses/this.totalClasses)*100}${'%'}`}];
+  data3 = [{studentId: 21345, studentName: 'Abdul Moiz', attendedClasses: 15, totalClasses: 20}];
   ColumnMode = ColumnMode;
   users = [];
   tutorials = [];
@@ -45,7 +49,7 @@ export class TutorialsManagementComponent implements OnInit {
     this.loggedInUser = this.authenticationService.getUser();
     this.accessToken = this.authenticationService.getAuthToken();
     this.isAdmin = this.authenticationService.isAdmin();
-    this.getAllTutorials();
+    //this.getAllTutorials();
 
     this.tutorialForm = new FormGroup({
       'tutorial_name': new FormControl(null, [Validators.required, Validators.maxLength(40)]),
@@ -58,32 +62,46 @@ export class TutorialsManagementComponent implements OnInit {
     });
 
   }
-
-  filterDatatable(event) {
-    // get the value of the key pressed and make it lowercase
-    let val = this.search.nativeElement.value.toLowerCase();
-    if (val === "") {
-      this.data1 = this.filtered_users;
-    } else {
-      // get the amount of columns in the table
-      let colsAmt = this.columns.length;
-      // get the key names of each column in the dataset
-      let keys = this.columns.map(a => a.name);
-      // assign filtered matches to the active datatable
-      this.data1 = this.filtered_users.filter(function (item) {
-        // iterate through each row's column data
-        for (let i = 0; i < colsAmt; i++) {
-          // check for a match
-          if (item[keys[i]].toString().toLowerCase().indexOf(val) !== -1 || !val) {
-            // found match, return true to add to result set
-            return true;
-          }
-        }
-      });
-      // whenever the filter changes, always go back to the first page
-      // this.table.nativeElement.offset = 0;
+  onCheckBoxClick(rowIndex, event){
+    if (event.target.checked) {
+      let data = this.data2;
+      this.data3[rowIndex].attendedClasses+=1
+      data[rowIndex].attendance = `${((this.data3[rowIndex].attendedClasses)/this.data3[rowIndex].totalClasses)*100}${'%'}`
+      this.data2 = data;
+    }else{
+      let data = this.data2;
+      this.data3[rowIndex].attendedClasses-=1
+      data[rowIndex].attendance = `${((this.data3[rowIndex].attendedClasses)/this.data3[rowIndex].totalClasses)*100}${'%'}`
+      this.data2 = data;
     }
+
   }
+
+  // filterDatatable(event) {
+  //   // get the value of the key pressed and make it lowercase
+  //   let val = this.search.nativeElement.value.toLowerCase();
+  //   if (val === "") {
+  //     this.data1 = this.filtered_users;
+  //   } else {
+  //     // get the amount of columns in the table
+  //     let colsAmt = this.columns.length;
+  //     // get the key names of each column in the dataset
+  //     let keys = this.columns.map(a => a.name);
+  //     // assign filtered matches to the active datatable
+  //     this.data1 = this.filtered_users.filter(function (item) {
+  //       // iterate through each row's column data
+  //       for (let i = 0; i < colsAmt; i++) {
+  //         // check for a match
+  //         if (item[keys[i]].toString().toLowerCase().indexOf(val) !== -1 || !val) {
+  //           // found match, return true to add to result set
+  //           return true;
+  //         }
+  //       }
+  //     });
+  //     // whenever the filter changes, always go back to the first page
+  //     // this.table.nativeElement.offset = 0;
+  //   }
+  // }
 
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {

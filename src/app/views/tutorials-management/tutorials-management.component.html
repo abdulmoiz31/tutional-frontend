@@ -1,36 +1,27 @@
 <div class="container parent-div row">
     <div class="header-div">
-        <h2 class="heading">Tutorial Management</h2>
+        <h2 class="heading">Tutorials</h2>
         <div class="input-group text-center input-div">
             <button *ngIf="isAdmin" class="btn btn-outline-dark rounded-lg batn" type="button"
                 (click)="open(tutorialFormA,-1)"><i class="fa fa-plus"></i>
                 Add Tutorial</button>
-            <input #searchContent type="text" class="search-input form-control form control-sm"
-                (keyup)="filterDatatable($event)" placeholder="Search for...">
+            <input #searchContent type="text" class="search-input form-control form control-sm" placeholder="Search for...">
         </div>
     </div>
     <div class="material container table-div ">
-        <ngx-datatable #table class="material fullscreen ngx-table" [rows]="data1" [loadingIndicator]="loadingIndicator"
+        <ngx-datatable #table class="material fullscreen ngx-table" [rows]="data2" [loadingIndicator]="loadingIndicator"
             [columns]="columns" [columnMode]="ColumnMode.force" rowHeight="auto" [reorderable]="reorderable"
             [externalPaging]="false" [limit]="12" [headerHeight]="50" [footerHeight]="50" rowHeight="auto"
             [rowHeight]="50" [scrollbarH]="true">
-            <ngx-datatable-column name="Tutorial ID" prop='tutorial_id'>
+            <ngx-datatable-column name="Student ID" prop='studentId'>
             </ngx-datatable-column>
-            <ngx-datatable-column name="Tutorial Name" prop='tutorial_name'>
+            <ngx-datatable-column name="Student Name" prop='studentName'>
             </ngx-datatable-column>
-            <ngx-datatable-column name="Tutorial URL" prop='tutorial_url'>
-                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
-
-                    <a href="{{value}}" target="_blank">{{value}}</a>
-
-                </ng-template>
+            <ngx-datatable-column name="Attendance" prop='attendance'>
             </ngx-datatable-column>
             <ngx-datatable-column name="Actions" prop="name">
                 <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
-                    <button type="button" class="btn btn-outline-success" (click)='open(updateTutorialpop, rowIndex)'
-                        *ngIf="isAdmin"><i class="fa fa-edit"></i> Edit</button>
-                    <button type="button" class="btn btn-outline-danger delete-table-btn"
-                        (click)="openForDelete(delete, rowIndex)">Delete</button>
+                    <input type="checkbox" checked="false" (change)="onCheckBoxClick(rowIndex, $event)">
                 </ng-template>
             </ngx-datatable-column>
 

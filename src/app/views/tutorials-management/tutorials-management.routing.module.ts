@@ -7,7 +7,7 @@ const routes: Routes = [
         path: '',
         component: TutorialsManagementComponent,
         data: {
-            title: 'User Management'
+            title: 'Claass Attendance'
         }
     },
 ];

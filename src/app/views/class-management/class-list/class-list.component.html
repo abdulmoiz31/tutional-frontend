@@ -1,0 +1,58 @@
+<div class="container parent-div row">
+    <div class="header-div">
+        <h2 class="heading">Class Management</h2>
+        <div class="input-group text-center input-div">
+            <button *ngIf="isAdmin" class="btn btn-outline-dark rounded-lg batn" type="button"
+                (click)="open()"><i class="fa fa-plus"></i>
+                Create Class</button>
+            <input #searchContent type="text" class="search-input form-control form control-sm"
+                (keyup)="filterDatatable($event)" placeholder="Search for...">
+        </div>
+    </div>
+    <div class="material container table-div">
+        <ngx-datatable #table class="material fullscreen ngx-table" [rows]="data" [loadingIndicator]="loadingIndicator"
+            [columns]="columns" [columnMode]="ColumnMode.force" rowHeight="auto" [reorderable]="reorderable"
+            [externalPaging]="false" [limit]="12" [headerHeight]="50" [footerHeight]="50" rowHeight="auto"
+            [rowHeight]="50" [scrollbarH]="true">
+
+            <ngx-datatable-column name="Class ID" prop='id'>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Class Name" prop='className'>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Instructors" prop='teachers'>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Actions" prop="name">
+                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                    <button type="button" class="btn btn-outline-success" (click)='edit(rowIndex)'
+                        *ngIf="isAdmin"><i class="fa fa-edit"></i> Edit</button>
+                    <button type="button" class="btn btn-outline-primary view-table-btn" (click)='userDetail(rowIndex)'><i
+                            class="fa fa-eye"></i> View</button>
+                    <button type="button" class="btn btn-outline-danger view-table-btn" (click)='deleteClass(rowIndex, delete)'><i
+                            class="fa fa-trash"></i> Delete</button>
+                </ng-template>
+            </ngx-datatable-column>
+
+        </ngx-datatable>
+    </div>
+</div>
+
+<ng-template #delete let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{project_name}}</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="mx-auto">
+            <div class="card mx-4">
+                <div class="card-body p-4">
+                    <h3>You Want To Delete This Class?</h3>
+                    <button type="button" class="btn btn-danger modal-button" (click)="deleteConfirmed()">Delete</button>
+                    <button type="button" class="btn btn-outline-dark modal-button"
+                        (click)="modal.close('Save click')">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

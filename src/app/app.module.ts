@@ -34,8 +34,15 @@ import { ChangePasswordComponent } from './views/change-password/change-password
 import { TutorialsComponent } from './views/tutorials/tutorials.component';
 import { LovManagementModule } from './views/lov-management/lov-management.module';
 import { TutorialsManagementModule } from './views/tutorials-management/tutorials-management.module';
-import { AnnouncementManagementComponent } from './views/announcement-management/announcement-management.component';
 import { AnnouncementManagementModule } from './views/announcement-management/announcement-management.module';
+import { TeacherManagementModule } from './views/teacher-management/teacher-management.module';
+import { ClassManagementModule } from './views/class-management/class-management.module';
+import { CommunicationService } from './common/communication.service';
+import { LOVManagementService } from './common/lov-service-rest';
+import { TeacherDetailComponent } from './views/teacher-management/teacher-detail/teacher-detail.component';
+import { UpdateTeacherComponent } from './views/teacher-management/update-teacher/update-teacher.component';
+import { FormsModule } from '@angular/forms';
+import { MaskedTextBoxModule } from '@syncfusion/ej2-angular-inputs';
 
 @NgModule({
   imports: [
@@ -56,7 +63,12 @@ import { AnnouncementManagementModule } from './views/announcement-management/an
     BrowserAnimationsModule,
     TutorialsManagementModule,
     NgxDatatableModule,
-    AnnouncementManagementModule
+    AnnouncementManagementModule,
+    TeacherManagementModule,
+    ClassManagementModule,
+    FormsModule,
+    MaskedTextBoxModule,
+    BrowserModule
   ],
 
   declarations: [
@@ -73,7 +85,7 @@ import { AnnouncementManagementModule } from './views/announcement-management/an
       provide: LocationStrategy,
       useClass: HashLocationStrategy,
     },
-    IconSetService,
+    IconSetService, CommunicationService, LOVManagementService
   ],
   bootstrap: [AppComponent]
 })

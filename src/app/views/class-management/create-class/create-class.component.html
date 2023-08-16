@@ -1,0 +1,16 @@
+<div class="container card mb-2 mt-3" *ngIf="currentStepper == _IDS.STEPPER_TEACHERS">
+  <form [formGroup]="classForm">
+    <div class="form-group mt-3">
+      <input type="text" class="form-control" formControlName="className" id="className" placeholder="Enter Class Name...">
+    </div>
+  </form>
+</div>
+<app-selection-list [displayList]="teachers" [stepper]="currentStepper" 
+*ngIf="currentStepper == _IDS.STEPPER_TEACHERS" (onCheck)="onCheckTeacher()"></app-selection-list>
+<app-selection-list [displayList]="students" [stepper]="currentStepper"
+*ngIf="currentStepper == _IDS.STEPPER_STUDENTS" (onCheck)="onCheckStudent()"></app-selection-list>
+<div class="row d-flex justify-content-center mt-4">
+  <button class="btn btn-outline-secondary mr-5 active btn-width" (click)="onBack()">Back</button>
+  <button class="btn btn-outline-primary ml-5 active btn-width" *ngIf="currentStepper == _IDS.STEPPER_TEACHERS" (click)="onNext()">Next</button>
+  <button class="btn btn-outline-primary ml-5 active btn-width" *ngIf="currentStepper == _IDS.STEPPER_STUDENTS" (click)="onSubmit()" [disabled]="!isValid()">{{classId? 'Update' : 'Submit'}}</button>
+</div>

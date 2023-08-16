@@ -8,6 +8,7 @@ import { ChangePasswordComponent } from './views/change-password/change-password
 import { P404Component } from './views/error/404.component';
 import { P500Component } from './views/error/500.component';
 import { LoginComponent } from './views/login/login.component';
+import { TutorialsManagementComponent } from './views/tutorials-management/tutorials-management.component';
 import { TutorialsComponent } from './views/tutorials/tutorials.component';
 
 
@@ -63,7 +64,7 @@ export const routes: Routes = [
       {
         path: 'tutorials-list',
         canActivate: [LoggedAuthGuard],
-        component: TutorialsComponent
+        component: TutorialsManagementComponent
       }
     ]
   },
@@ -78,6 +79,34 @@ export const routes: Routes = [
         path: 'user-management',
         canActivate: [LoggedAuthGuard],
         loadChildren: () => import('./views/user-management/user-management.module').then(m => m.UserManagementModule)
+      }
+    ]
+  },
+  {
+    path: '',
+    component: DefaultLayoutComponent,
+    data: {
+      title: 'Teacher Management'
+    },
+    children: [
+      {
+        path: 'teacher-management',
+        canActivate: [LoggedAuthGuard],
+        loadChildren: () => import('./views/teacher-management/teacher-management.module').then(m => m.TeacherManagementModule)
+      }
+    ]
+  },
+  {
+    path: '',
+    component: DefaultLayoutComponent,
+    data: {
+      title: 'Class Management'
+    },
+    children: [
+      {
+        path: 'class-management',
+        canActivate: [LoggedAuthGuard],
+        loadChildren: () => import('./views/class-management/class-management.module').then(m => m.ClassManagementModule)
       }
     ]
   },

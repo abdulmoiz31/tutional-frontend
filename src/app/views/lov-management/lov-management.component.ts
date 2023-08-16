@@ -2,7 +2,6 @@ import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core'
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { AuthenticationService } from '../../common/authentication-service.service';
 import { UtillsService } from '../../common/utills-service.service';
-import { userTypes } from '../../mapping/userTypes';
 
 //importing interfaces
 import { responseDataForStack } from '../../interface/lov-management-interface';
@@ -64,9 +63,9 @@ export class LovManagementComponent implements OnInit {
     let user_Type = this.authenticationService.getUser().user_Type;
 
     //checking whether userType is admin or user
-    if (user_Type === userTypes.admin) {
-      this.isAdmin = true;
-    }
+    
+      this.isAdmin = this.authenticationService.isAdmin();
+    
 
     //getting data for the tables
     this.getStack();

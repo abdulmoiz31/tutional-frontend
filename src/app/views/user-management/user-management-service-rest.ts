@@ -2,8 +2,8 @@ import { HttpClient, HttpHeaders, HttpRequest } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { AuthenticationService } from "../../common/authentication-service.service"
 import { Observable } from "rxjs";
-import { userTypes } from "../../mapping/userTypes";
 import { environment } from "../../../environments/environment";
+import { IDS, USER_TYPES } from "../../constants/app.constants";
 
 @Injectable()
 export class UserManagementService {
@@ -20,6 +20,7 @@ export class UserManagementService {
     SIGNUP_URL = this.BASE_URL + '/signup';
     PROFILE_PICTURE_URL = this.BASE_URL + '/images/upload';
     DELETE_USER = this.USER_URL + '/delete/';
+    INSTRUCTOR_URL = `${this.BASE_URL}/instructor`
     
     constructor(private http: HttpClient, private authentication: AuthenticationService) {};
 
@@ -34,6 +35,10 @@ export class UserManagementService {
             }),
         };
         return this.http.get<string[]>(`${this.USER_URL}${'/students'}`, httpOptions);
+    }
+
+    getUserById(id){
+        return this.http.post(`${this.USER_URL}/users`, { 'email': id }, { headers: new HttpHeaders({ 'Authorization': 'Bearer ' + this.authentication.getAuthToken() }) });
     }
 
     getTeachers(accessToken): Observable<string[]> {
@@ -86,49 +91,13 @@ export class UserManagementService {
         return this.http.get(this.ALL_CV_URL + id, { headers: new HttpHeaders({ 'Authorization': 'Bearer ' + this.authentication.getAuthToken() }) });
     }
 
-    updateUser(formData, id) {
-
-        if (this.authentication.isAdmin()) {
-            let pLead = [];
-            let currentProject = [];
-            let toDostack = [];
-            let currentStack = [];
-            let loc = { _id: "619de5aa3cbf58e51e14f5f4" };
-            for (let i = 0; i < formData.projectDetailSection.length; i++) {
-                currentProject.push({
-                    "project_Name": formData.projectDetailSection[i].currentprojects
-                });
-                pLead.push({
-                    "p_Lead_Name": formData.projectDetailSection[i].projectlead
-                })
-            }
-            for (let i = 0; i < formData.currentstack.length; i++) {
-                currentStack.push({
-                    "stack_detail": formData.currentstack[i].item_id
-                });
-            }
-            for (let i = 0; i < formData.todostack.length; i++) {
-                toDostack.push({
-                    "stack_detail": formData.todostack[i].item_id
-                });
-            }
-            return this.http.put(this.UPDATE_URL + "/" + id, {
-                "contact_num": String(formData.contact),
-                "experience": Number(formData.experiance),
-                "linkedin_URL": String(formData.linkedinlink),
-                "Current_Projects": currentProject,
-                "project_Lead": pLead,
-                "current_Stack": currentStack,
-                "to_Do_Stack": toDostack
-            }, { headers: new HttpHeaders({ 'Authorization': 'Bearer ' + this.authentication.getAuthToken() }) })
-        }
-        else {
-            return this.http.put(this.UPDATE_URL + "/" + id, {
-                "contact_num": String(formData.contact),
-                "experience": Number(formData.experiance),
-                "linkedin_URL": String(formData.linkedinlink)
-            }, { headers: new HttpHeaders({ 'Authorization': 'Bearer ' + this.authentication.getAuthToken() }) })
-        }
+    updateUser(formData) {
+        const httpOptions = {
+            headers: new HttpHeaders({
+                Authorization: 'Bearer ' + this.authentication.getAuthToken()
+            }),
+        };
+        return this.http.post(`${this.INSTRUCTOR_URL}/update`, formData, httpOptions);
     }
 
     studentSignup(formData) {
@@ -138,16 +107,7 @@ export class UserManagementService {
             }),
         };
         
-        return this.http.post(`${this.SIGNUP_URL}${'/student'}`, {
-            email: String(formData.email),
-            password: String(formData.password),
-            name: String(formData.name),
-            session: String(formData.session),
-            admissionSession: String(formData.admissionSession),
-            studentId: String(formData.studentId),
-            grade: formData.grade,
-            isDisabled: false
-        }, httpOptions);
+        return this.http.post(`${this.SIGNUP_URL}${'/student'}`, formData, httpOptions);
     }
 
     teacherSignup(formData) {
@@ -174,8 +134,8 @@ export class UserManagementService {
         return this.http.get(`${this.PROFILE_PICTURE_URL}${id}`, httpOptions);
     };
 
-    uploadProfilePic(file: String, format) {
-        return this.http.post(this.PROFILE_PICTURE_URL, { image: file, imageformat: format}, { headers: new HttpHeaders({ 'Authorization': 'Bearer ' + this.authentication.getAuthToken() }) });
+    uploadProfilePic(payload) {
+        return this.http.post(this.PROFILE_PICTURE_URL, {image: payload.image, imageformat: payload.imageformat, email: payload.email}, { headers: new HttpHeaders({ 'Authorization': 'Bearer ' + this.authentication.getAuthToken() }) });
     };
 
     updateLocation(formData, id: number) {

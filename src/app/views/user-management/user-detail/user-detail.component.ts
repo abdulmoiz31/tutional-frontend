@@ -4,9 +4,9 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subscription } from 'rxjs';
 import { AuthenticationService } from '../../../common/authentication-service.service';
+import { CommunicationService } from '../../../common/communication.service';
 import { DataService } from '../../../common/dataservice.service';
 import { UtillsService } from '../../../common/utills-service.service';
-import { subjects } from '../../../constants/ids.constants';
 import { UserManagementService } from '../user-management-service-rest';
 
 @Component({
@@ -16,7 +16,7 @@ import { UserManagementService } from '../user-management-service-rest';
 })
 export class UserDetailComponent implements OnInit, OnDestroy {
   @ViewChild("infoModal") infoModal: TemplateRef<any>;
-  profile = { fullname: '', email: '', contact: '', admissionSession: '', session: '', grade: '', subjects: [], todoStack: [], linkedin: '', current_projects: [] }
+  profile = { fullname: '', email: '', contact: '', admissionSession: '', session: '', grade: '', classes: [], todoStack: [], linkedin: '', current_projects: [] }
   modalStack = "";
   modalLead = "";
   modalDesignation = "";
@@ -41,66 +41,34 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     private authentication: AuthenticationService,
     private utillService: UtillsService,
     private dataservice: DataService,
-    private router: Router
+    private router: Router,
+    private commService: CommunicationService
   ) {
 
   };
 
   ngOnInit(): void {
-    // this.subscription = this._Activatedroute.params.subscribe(params => {
-    //   this.id = params.id;
-    //   this.getProfilePicture();
-      
-    //   if (this.authentication.getUser().emp_id == this.id || this.authentication.isAdmin()) {
-    //     this.hasEditAccess = true;
-    //   }
-    //   else {
-    //     this.hasEditAccess = false;
-    //   };
-
-    //   //calling function to get users' profile pic
-    //   //for checking whether login user id is same as of current user whose details are open
-    //   if (this.id === this.authentication.getUser().emp_id) {
-    //     //meaning loggedin user and emp whose detail section is currently in view, both are same
-    //     //so display edit image button
-    //     this.displayEditButton = true;
-    //   }
-    //   else {
-    //     this.displayEditButton = false;
-    //   };
-
-    //   
-    // })
-    if (this.authentication.isAdmin() && this.authentication.getUser().email !== this.dataservice.getCurrentUser().email) {
+    this.getUserData()
+    if (this.authentication.isAdmin() && this.authentication.getUser().email != this.commService.userDetailId) {
       this.hasDeleteAccess = true;
       this.hasEditAccess = true;
     }
-    if (this.authentication.getUser().email == this.dataservice.getCurrentUser().email) {
+    if (this.authentication.getUser().email == this.dataservice.getCurrentUser().email || this.authentication.isAdmin()) {
       this.displayEditButton = true
     }
 
-    this.populateData(this.dataservice.getCurrentUser())
+    
   };
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    //this.subscription.unsubscribe();
   }
-  getFileUrl(index) {
-    const source = `data:application/pdf;base64,${this.fileUrls[index]}`;
-    const link = document.createElement("a");
-    link.href = source;
-    link.download = `${'CV'}.pdf`
-    link.click();
-  }
-
-  getAllCvs(id) {
-    this.spinner.show();
-    this.fetchData.getAllCVS(id).subscribe((resData: any) => {
+  
+  getUserData(){
+    this.spinner.show()
+    this.fetchData.getUserById(this.commService.userDetailId).subscribe((resData: any) => {
       this.spinner.hide();
-      for (let index = 0; index < resData.length; index++) {
-        this.listOfFiles.push(resData[index].name);
-        this.fileUrls.push(resData[index].url);
-      }
+      this.populateData(resData.user)  
     },
       error => {
         this.spinner.hide();
@@ -118,11 +86,11 @@ export class UserDetailComponent implements OnInit, OnDestroy {
 
   deleteUser() {
     this.spinner.show();
-    this.fetchData.deleteUser(this.dataservice.getCurrentUser().email)
+    this.fetchData.deleteUser(this.commService.userDetailId)
       .subscribe(
         (resData: any) => {
           this.spinner.hide();
-          this.utillService.showSuccess('User Deleted Successfully');
+          this.utillService.showSuccess(resData.message);
           this.modalService.dismissAll();
           this.router.navigate(['/user-management']);
         },
@@ -161,6 +129,10 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     });
   }
 
+  onEditUser(){
+    this.commService.userUpdateId = this.commService.userDetailId;
+  }
+
   open(content, index) {
     //setting data into popup modal
     this.project_name = this.profile.current_projects[index].name;
@@ -191,12 +163,19 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     reader.onload = () => {
       let data: any = reader.result;
       let base64data = data.split('base64,')[1];
-      this.fetchData.uploadProfilePic(String(base64data), format)
+      let payload = {
+        image: String(base64data),
+        imageformat: format,
+        email: this.profile.email
+      }
+      this.fetchData.uploadProfilePic(payload)
         .subscribe(
           (resData: any) => {
             this.imageURL = resData.url;
             this.profilePicAvailable = true;
-            this.dataservice.updateProfilePicture(resData.profile_Picture);
+            if (this.profile.email == this.authentication.getUser().email) {
+              this.dataservice.updateProfilePicture(resData.url);
+            }
             this.spinner.hide();
             this.utillService.showSuccess(resData.msg);
           },
@@ -211,12 +190,14 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     this.profile.fullname = data.name;
     this.profile.email = data.email;
     this.profile.contact = data.phoneNumber;
-    this.profile.admissionSession = data.admissionSession;
-    this.profile.session = data.session;
-    this.profile.grade = data.grade;
-    let tempsSubjects = data.subjects;
-    tempsSubjects?.forEach(element => {
-      this.profile.subjects.push(subjects[element.id].name)
+    this.profile.admissionSession = data.admissionSessionTitle;
+    this.profile.session = data.sessionTitle;
+    this.profile.grade = data.gradeTitle;
+    this.imageURL = data.profilePictureUrl;
+    this.profilePicAvailable = this.imageURL? true : false;
+    let tempsClasses = data.classes;
+    tempsClasses?.forEach(element => {
+      this.profile.classes.push(element)
     });
   }
   getUserID() {
@@ -233,4 +214,3 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     return this.authentication.getUser().emp_id;
   }
 }
-

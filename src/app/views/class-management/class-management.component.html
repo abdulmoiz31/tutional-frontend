@@ -1,0 +1,2 @@
+<app-class-list *ngIf="displayList" (createClass)="showCreateClass($event)" (onEdit)="onClassEdit($event)"></app-class-list>
+<app-create-class *ngIf="!displayList" (classCreated)="onCLassCreate()" [classId]="classId"></app-create-class>

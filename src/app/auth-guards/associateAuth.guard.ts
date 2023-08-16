@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { AuthenticationService } from '../common/authentication-service.service';
-import { userTypes } from '../mapping/userTypes';
+import { USER_TYPES } from '../constants/app.constants';
+
 
 @Injectable({ providedIn: 'root' })
 export class AssociateAuthGuard implements CanActivate {
@@ -11,7 +12,7 @@ export class AssociateAuthGuard implements CanActivate {
     ) { }
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
         let currentUser = this.authenticationService.getUser();
-        if (currentUser && currentUser.user_Type == userTypes.teacherUser) {
+        if (currentUser && currentUser.user_Type == USER_TYPES.teacherUser) {
             // authorised so return true
             return true;
         }

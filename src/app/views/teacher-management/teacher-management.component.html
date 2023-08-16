@@ -1,0 +1,97 @@
+<div class="container parent-div row">
+    <div class="header-div">
+        <h2 class="heading">Teacher Management</h2>
+        <div class="input-group text-center input-div">
+            <button *ngIf="isAdmin" class="btn btn-outline-dark rounded-lg batn" type="button"
+                (click)="open(userSignup)"><i class="fa fa-plus"></i>
+                Add Teacher</button>
+            <input #searchContent type="text" class="search-input form-control form control-sm"
+                (keyup)="filterDatatable($event)" placeholder="Search for...">
+        </div>
+    </div>
+    <div class="material container table-div">
+        <ngx-datatable #table class="material fullscreen ngx-table" [rows]="data" [loadingIndicator]="loadingIndicator"
+            [columns]="columns" [columnMode]="ColumnMode.force" rowHeight="auto" [reorderable]="reorderable"
+            [externalPaging]="false" [limit]="12" [headerHeight]="50" [footerHeight]="50" rowHeight="auto"
+            [rowHeight]="50" [scrollbarH]="true">
+            
+            <ngx-datatable-column name="Name" prop='name'>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="CNIC" prop='cnic'>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Phone" prop='phoneNumber'>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Classes" prop='classes'>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Actions" prop="name">
+                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                    <button type="button" class="btn btn-outline-success" (click)='edit(rowIndex)'
+                        *ngIf="isAdmin"><i class="fa fa-edit"></i> Edit</button>
+                    <button type="button" class="btn btn-outline-primary view-table-btn" (click)='userDetail(rowIndex)'><i
+                            class="fa fa-eye"></i> View</button>
+                </ng-template>
+            </ngx-datatable-column>
+
+        </ngx-datatable>
+    </div>
+    <!--Modal-->
+    <ng-template #userSignup let-modal>
+        <div class="modal-header">
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="mx-auto">
+                <div class="card mx-4">
+                    <div class="card-body p-4">
+                        <form [formGroup]="signupForm">
+                            <h1>Register</h1>
+                            <p class="text-muted">Create account</p>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="icon-user"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Name" autocomplete="name"
+                                    formControlName="name" required>
+                            </div>
+                            <small class="text-danger m-0 p-0"
+                                *ngIf="signupControls.name.touched && signupControls.name.errors?.required">
+                                <span>*This field is required</span>
+                            </small>
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-male" aria-hidden="true"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Email" autocomplete="email"
+                                    formControlName="email" required>
+                            </div>
+                            <small class="text-danger m-0 p-0"
+                                *ngIf="signupControls.email.touched && signupControls.email.errors?.required">
+                                <span>*This field is required</span>
+                            </small>
+                            <div class="input-group mt-4">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="icon-lock"></i></span>
+                                </div>
+                                <input type="password" class="form-control" placeholder="Password"
+                                    formControlName="password" required>
+                            </div>
+                            <small class="text-danger m-0 p-0"
+                                *ngIf="!signupForm.get('password').valid && signupForm.get('password').touched">
+                                <span *ngIf="signupForm.get('password').errors ">*Enter a valid Password Length
+                                    (8-40)</span>
+                            </small>
+                            <button type="button" class="btn btn-block btn-success mt-4" (click)="signupUser()">Create
+                                Account</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
+        </div>
+    </ng-template>
+</div>

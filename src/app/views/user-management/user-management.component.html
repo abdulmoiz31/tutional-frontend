@@ -1,10 +1,10 @@
 <div class="container parent-div row">
     <div class="header-div">
-        <h2 class="heading">User Management</h2>
+        <h2 class="heading">Student Management</h2>
         <div class="input-group text-center input-div">
             <button *ngIf="isAdmin" class="btn btn-outline-dark rounded-lg batn" type="button"
                 (click)="open(userSignup)"><i class="fa fa-plus"></i>
-                Add User</button>
+                Add Student</button>
             <input #searchContent type="text" class="search-input form-control form control-sm"
                 (keyup)="filterDatatable($event)" placeholder="Search for...">
         </div>
@@ -18,15 +18,15 @@
             </ngx-datatable-column>
             <ngx-datatable-column name="Name" prop='name'>
             </ngx-datatable-column>
-            <ngx-datatable-column name="Session" prop='session'>
+            <ngx-datatable-column name="Session" prop='sessionTitle'>
             </ngx-datatable-column>
-            <ngx-datatable-column name="Admission Session" prop='admissionSession'>
+            <ngx-datatable-column name="Admission Session" prop='admissionSessionTitle'>
             </ngx-datatable-column>
-            <ngx-datatable-column name="Grade" prop='grade'>
+            <ngx-datatable-column name="Grade" prop='gradeTitle'>
             </ngx-datatable-column>
             <ngx-datatable-column name="Actions" prop="name">
                 <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
-                    <button type="button" class="btn btn-outline-success" (click)='edit(data[rowIndex].emp_id)'
+                    <button type="button" class="btn btn-outline-success" (click)='edit(rowIndex)'
                         *ngIf="isAdmin"><i class="fa fa-edit"></i> Edit</button>
                     <button type="button" class="btn btn-outline-primary view-table-btn" (click)='userDetail(rowIndex)'><i
                             class="fa fa-eye"></i> View</button>
@@ -88,15 +88,8 @@
                                     <span class="input-group-text"><i class="fa fa-address-card"></i></span>
                                 </div>
                                 <select formControlName="grade" class="form-control">
-                                    <option [ngValue]="null" [disabled]="true">Select Grade</option> -->
-                                    <!-- <option
-                                      *ngFor="let profession of professionLOV"
-                                      [value]="profession.id"
-                                    >
-                                      {{ profession.description }}
-                                    </option> -->
-                                    <option value="100101">O Levels</option>
-                                    <option value="100102">A Levels</option>
+                                    <option [ngValue]="null" [disabled]="true">Select Grade</option>
+                                    <option *ngFor="let grade of grades" [value]="grade.lovId">{{grade.lovTitle}}</option>
                                   </select>
                             </div>
                             <small class="text-danger m-0 p-0"
@@ -108,15 +101,8 @@
                                     <span class="input-group-text"><i class="fa fa-address-card"></i></span>
                                 </div>
                                 <select formControlName="session" class="form-control">
-                                    <option [ngValue]="null" [disabled]="true">Select Session</option> -->
-                                    <!-- <option
-                                      *ngFor="let profession of professionLOV"
-                                      [value]="profession.id"
-                                    >
-                                      {{ profession.description }}
-                                    </option> -->
-                                    <option value="100201">Nov</option>
-                                    <option value="100202">June</option>
+                                    <option [ngValue]="null" [disabled]="true">Select Session</option>
+                                    <option *ngFor="let session of sessions" [value]="session.lovId">{{session.lovTitle}}</option>
                                   </select>
                             </div>
                             <small class="text-danger m-0 p-0"
@@ -128,15 +114,8 @@
                                     <span class="input-group-text"><i class="fa fa-address-card"></i></span>
                                 </div>
                                 <select formControlName="admissionSession" class="form-control">
-                                    <option [ngValue]="null" [disabled]="true">Select Admission Session</option> -->
-                                    <!-- <option
-                                      *ngFor="let profession of professionLOV"
-                                      [value]="profession.id"
-                                    >
-                                      {{ profession.description }}
-                                    </option> -->
-                                    <option value="100301">Nov</option>
-                                    <option value="100302">June</option>
+                                    <option [ngValue]="null" [disabled]="true">Select Admission Session</option>
+                                    <option *ngFor="let adSession of admissionSessions" [value]="adSession.lovId">{{adSession.lovTitle}}</option>
                                   </select>
                             </div>
                             <small class="text-danger m-0 p-0"

@@ -12,3 +12,5 @@ export const subjects = {
         name:"Chemistry"
     },
 }
+export const STEPPER_TEACHERS = "SELECT_TEACHERS";
+export const STEPPER_STUDENTS = "SELECT_STUDENTS";

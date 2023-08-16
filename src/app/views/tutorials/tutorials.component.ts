@@ -21,7 +21,7 @@ export class TutorialsComponent implements OnInit {
   
   constructor(private authentication: AuthenticationService, private tutorialsservice: TutorialsService, private utillservice: UtillsService) {
     this.accessToken = authentication.getAuthToken();
-    this.tutorialsList();
+   // this.tutorialsList();
   }
 
   ngOnInit(): void {
